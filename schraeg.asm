@@ -92,7 +92,7 @@ write_string:
 	mov	rax, SYS_WRITE	; write syscall
 	mov	rdi, STDOUT	; fd = 1 (stdout)
 	mov	rdx, 0		; count bytes
-    mov rcx, 0      ; keep current position in string (number of spaces)
+    mov word rcx, 0      ; keep current position in string (number of spaces)
 	push	rsi		; keep starting address of string
 search_eos:
 	;; here we have to specify the string size (byte) 
@@ -100,7 +100,7 @@ search_eos:
 	je	eos_found	; yes, end of loop
     push rcx
 print_blanks:
-    cmp rcx, 0      ; if its the first char of the string
+    cmp word rcx, 0      ; if its the first char of the string
     je search_eos2  ; continue
     call write_blankspace   ; else: write space char
     dec rcx ; remaining number of spaces to print
