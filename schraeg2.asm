@@ -19,7 +19,7 @@ section .data
 newline:
  	db 0x0a
 ;;; space character
-blankspace:
+blank:
     db 0x20
 
 ;;; start of code section
@@ -69,7 +69,7 @@ write_string:
 writing_loop:
     cmp [rsi], byte 0
     je eos_found
-    mov r8, blankspace
+    mov r8, 0x20
     mov r9, 0   ; inner loop variable
 
 blank_loop:
@@ -79,7 +79,7 @@ blank_loop:
     call write_char
     jmp blank_loop
 
-write_one_char:
+write_one_char
     mov r8, rsi
     call write_char
     mov r8, newline
