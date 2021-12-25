@@ -79,7 +79,7 @@ blank_loop:
     cmp r9, rcx
     je write_one_char
     call write_char
-    jpm blank_loop
+    jmp blank_loop
 
 write_one_char:
     mov r8, rsi
