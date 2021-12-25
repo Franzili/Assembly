@@ -39,6 +39,7 @@ write_char:
 	push	rdi
 	push	rsi
 	push	rdx
+    push    r9
     push    r8
 	;; prepare arguments for write syscall
 	mov	rax, SYS_WRITE	; write syscall
@@ -48,6 +49,7 @@ write_char:
 	syscall			; system call
 	;; restore registers (in opposite order)
     pop r8
+    pop r9
 	pop	rdx
 	pop	rsi
 	pop	rdi
