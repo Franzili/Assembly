@@ -64,7 +64,7 @@ write_string:
 	push	rdx
     mov rcx, 0
     push    rcx
-    mov r9, 0
+    push    r9
 
 writing_loop:
     cmp [rsi], byte 0
@@ -73,6 +73,7 @@ writing_loop:
 	inc	rdx		; count
 	inc	rsi		; next position in string
     mov r8, blankspace
+    mov r9, 0   ; inner loop variable
 
 blank_loop:
     inc r9
@@ -92,6 +93,7 @@ eos_found:
 	pop	rsi		; restore starting address of string
 	;; here rdx contains the string length
 	syscall			; system call
+    pop r9
     pop rcx
     pop	rdx
 	pop	rdi
