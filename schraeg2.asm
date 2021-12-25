@@ -39,7 +39,7 @@ write_char:
 	push	rdi
 	push	rsi
 	push	rdx
-    mov r8, 0x31
+    push    r8
 	;; prepare arguments for write syscall
 	mov	rax, SYS_WRITE	; write syscall
 	mov	rdi, STDOUT	; fd = 1 (stdout)
@@ -47,6 +47,7 @@ write_char:
 	mov	rdx, 1		; length
 	syscall			; system call
 	;; restore registers (in opposite order)
+    pop r8
 	pop	rdx
 	pop	rsi
 	pop	rdi
@@ -80,7 +81,7 @@ blank_loop:
 write_one_char:
     mov r8, rsi
     call write_char
-    mov r8, newline
+    mov r8, 0x0a    ; newline
     call write_char
     inc rcx     ; current position in string
 	inc	rdx		; count
