@@ -62,23 +62,21 @@ write_string:
 	push	rax
 	push	rdi
 	push	rdx
-    mov rcx, 0
+    mov rcx, 0  ; position in string
     push    rcx
-    push    r9
+    push    r9  ; inner loop variable
 
 writing_loop:
     cmp [rsi], byte 0
     je eos_found
     mov r8, 0x20
     mov r9, 0   ; inner loop variable
-
 blank_loop:
     cmp r9, rcx
     je write_one_char
-    inc r9
     call write_char
+    inc r9
     jmp blank_loop
-
 write_one_char:
     mov r8, rsi
     call write_char
@@ -88,7 +86,6 @@ write_one_char:
 	inc	rdx		; count
 	inc	rsi		; next position in string
     jmp writing_loop
-
 eos_found:
 	pop	rsi		; restore starting address of string
 	;; here rdx contains the string length
