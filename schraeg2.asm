@@ -72,13 +72,13 @@ writing_loop:
     inc rcx     ; current position in string
 	inc	rdx		; count
 	inc	rsi		; next position in string
-    mov r8, 0x20
+    mov r8, blankspace
     mov r9, 0   ; inner loop variable
 
 blank_loop:
-    inc r9
     cmp r9, rcx
     je write_one_char
+    inc r9
     call write_char
     jmp blank_loop
 
