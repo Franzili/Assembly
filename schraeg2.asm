@@ -109,7 +109,6 @@ read_args:
 	;; print command line arguments
 	pop	rsi		; argv[j]
 	call	write_string	; string in rsi is written to stdout
-	call	write_newline	; a newline character is written to stdout
 	dec	rbx		; dec arg-index
 	jnz	read_args	; continue until last argument was printed
 
