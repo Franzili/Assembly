@@ -39,6 +39,7 @@ write_char:
 	push	rdi
 	push	rsi
 	push	rdx
+    mov r8, 0x31
 	;; prepare arguments for write syscall
 	mov	rax, SYS_WRITE	; write syscall
 	mov	rdi, STDOUT	; fd = 1 (stdout)
@@ -65,7 +66,6 @@ write_string:
     mov rcx, 0  ; position in string
     push    rcx
     push    r9  ; inner loop variable
-
 writing_loop:
     cmp [rsi], byte 0
     je eos_found
@@ -89,7 +89,7 @@ write_one_char:
 eos_found:
 	pop	rsi		; restore starting address of string
 	;; here rdx contains the string length
-	syscall			; system call
+	syscall	    ; system call
     pop r9
     pop rcx
     pop	rdx
