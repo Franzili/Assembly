@@ -79,7 +79,7 @@ blank_loop:
     call write_char
     jmp blank_loop
 
-write_one_char
+write_one_char:
     mov r8, rsi
     call write_char
     mov r8, newline
