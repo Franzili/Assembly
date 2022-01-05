@@ -72,11 +72,13 @@ write_string:
 writing_loop:
     cmp [rsi], byte 0
     je eos_found
+	push rdx
     mov r8, 0x20
     mov r9, 0   ; inner loop variable
 blank_loop:
     cmp r9, rcx
     je write_one_char
+	mov rdx, r9
     call write_char
     inc r9
     jmp blank_loop
@@ -86,6 +88,7 @@ write_one_char:
     mov r8, 0x0a    ; newline
     call write_char
     inc rcx     ; current position in string
+	pop rdx
 	inc	rdx		; count
 	inc	rsi		; next position in string
     jmp writing_loop
