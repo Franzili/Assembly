@@ -29,7 +29,7 @@ section	.text
 
 
 ;;;----------------------------------------------------------------------------
-;;; subroutine write char
+;;; subroutine write_char
 ;;;----------------------------------------------------------------------------
 ;;; writes a character to stdout
 
@@ -62,21 +62,21 @@ write_char:
 ;;;--------------------------------------------------------------------------
 
 write_string:
-	;; save registers that are used in the code
 	push	rax
 	push	rdi
 	push	rdx
     mov rcx, 0  ; position in string
     push    rcx
     push    r9  ; inner loop variable
+	push 	rsi
 writing_loop:
     cmp [rsi], byte 0
     je eos_found
-    mov r8, 0x20
+    mov r8, blank
     mov r9, 0   ; inner loop variable
 blank_loop:
     cmp r9, rcx
-    je write_one_char
+    jge write_one_char
     call write_char
     inc r9
     jmp blank_loop
@@ -92,6 +92,7 @@ write_one_char:
 eos_found:
 	pop	rsi		; restore starting address of string
 	;; here rdx contains the string length
+	mov	rax, SYS_WRITE	; write syscall
 	syscall	    ; system call
     pop r9
     pop rcx
@@ -109,6 +110,7 @@ _start:
 	pop	rbx		; argc (>= 1 guaranteed)
 read_args:
 	;; print command line arguments
+	pop	rsi		; argv[j]
 	pop	rsi		; argv[j]
 	call	write_string	; string in rsi is written to stdout
 	dec	rbx		; dec arg-index
