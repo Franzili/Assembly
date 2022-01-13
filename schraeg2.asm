@@ -41,6 +41,7 @@ write_char:
 	push	rdx
     push    r9
     push    r8
+	push    rcx
 	;; prepare arguments for write syscall
 	mov	rax, SYS_WRITE	; write syscall
 	mov	rdi, STDOUT	; fd = 1 (stdout)
@@ -48,6 +49,7 @@ write_char:
 	mov	rdx, 1		; length
 	syscall			; system call
 	;; restore registers (in opposite order)
+	pop rcx
     pop r8
     pop r9
 	pop	rdx
@@ -68,7 +70,6 @@ write_string:
     mov rcx, 0  ; position in string
     push    rcx
     push    r9  ; inner loop variable
-	push 	rsi
 writing_loop:
     cmp [rsi], byte 0
     je eos_found
@@ -83,17 +84,14 @@ blank_loop:
 write_one_char:
     mov r8, rsi
     call write_char
-    mov r8, 0x0a    ; newline
+    mov r8, newline    ; newline
     call write_char
     inc rcx     ; current position in string
 	inc	rdx		; count
 	inc	rsi		; next position in string
     jmp writing_loop
 eos_found:
-	pop	rsi		; restore starting address of string
 	;; here rdx contains the string length
-	mov	rax, SYS_WRITE	; write syscall
-	syscall	    ; system call
     pop r9
     pop rcx
     pop	rdx
@@ -108,9 +106,10 @@ eos_found:
 
 _start:
 	pop	rbx		; argc (>= 1 guaranteed)
+	pop	rsi		; argv[j]
+	dec rbx
 read_args:
 	;; print command line arguments
-	pop	rsi		; argv[j]
 	pop	rsi		; argv[j]
 	call	write_string	; string in rsi is written to stdout
 	dec	rbx		; dec arg-index
