@@ -118,8 +118,7 @@ _start:
 read_args:
 	;; read input
 	pop	rsi		            ; argv[j]
-    call check_input        ; check input
-	call	write_string	; string in rsi is written to stdout
+	call	stoi	        ; convert string input to integer
 	dec	rbx		            ; dec arg-index
 	jnz	read_args	        ; continue until last argument was printed
 exit:
