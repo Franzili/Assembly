@@ -108,13 +108,14 @@ _start:
 	pop	rbx		; argc (>= 1 guaranteed)
 	pop	rsi		; argv[j]
 	dec rbx
+	jz exit
 read_args:
 	;; print command line arguments
 	pop	rsi		; argv[j]
 	call	write_string	; string in rsi is written to stdout
 	dec	rbx		; dec arg-index
 	jnz	read_args	; continue until last argument was printed
-
+exit:
 	;; exit program via syscall exit (necessary!)
 	mov	rax, SYS_EXIT	; exit syscall
 	mov	rdi, 0		; exit code 0 (= "ok")
