@@ -93,12 +93,10 @@ next_char:
     jb invalid_input
     cmp rsi, '9'
     ja input_invalid
-
 invalid_input:
     mov r8, input_invalid
     mov r9, len_inval_msg
     call write_string
-
 eos_found:
     pop rsi
     pop r10
@@ -121,7 +119,7 @@ read_args:
 	pop	rsi		            ; argv[j]
 	call	stoi	        ; convert string input to integer
 	dec	rbx		            ; dec arg-index
-	jnz	read_args	        ; continue until last argument was printed
+	jnz read_args	        ; continue until last argument was printed
 exit:
 	;; exit program via syscall exit (necessary!)
 	mov	rax, SYS_EXIT	; exit syscall
