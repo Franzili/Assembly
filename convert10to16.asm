@@ -89,9 +89,9 @@ next_char:
     inc rsi
     cmp [rsi], byte 0
     je eos_found
-    cmp rsi, $'0'
+    cmp rsi, '0'
     jb invalid_input
-    cmp rsi, $'9'
+    cmp rsi, '9'
     ja input_invalid
 
 invalid_input:
@@ -104,7 +104,6 @@ eos_found:
     pop r10
     pop r9
     pop r8
-
 
 
 ;;;--------------------------------------------------------------------------
