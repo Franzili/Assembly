@@ -93,6 +93,7 @@ next_char:
     jb invalid_input
     cmp rsi, '9'
     ja input_invalid
+    jmp next_char
 invalid_input:
     mov r8, input_invalid
     mov r9, len_inval_msg
