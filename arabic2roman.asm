@@ -28,14 +28,13 @@ ascii0:
 ascii9:
 	db 57
 ;;; roman numerals
-num1: db 'I'
-num5: db 'V'
-mum10: db 'X'
-num50: db 'L'
-num100: db 'C'
-num500: db 'D'
-num1000: db 'M'
-num5000: db 'v'
+num1: 		db 'I'
+num5: 		db 'V'
+mum10: 		db 'X'
+num50: 		db 'L'
+num100: 	db 'C'
+num500: 	db 'D'
+num1000: 	db 'M'
 
 ;;; start of code section
 section	.text
