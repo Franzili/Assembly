@@ -176,6 +176,7 @@ write_char:
 
 atoi:
 	push rsi
+	push edx
 	mov r15, 0
 
 convert_atoi:
@@ -188,8 +189,9 @@ convert_atoi:
 
 	; digit between 0 and 9
 	sub rsi, ascii0			; convert char to decimal
-	mul r15, 10				; next digit
-	add r15, rsi			; store next digit in r15
+	mov edx, rsi
+	mul 10					; next digit
+	add r15, edx			; store next digit in r15
 	inc rsi					; next position in string
 	jmp convert_atoi
 
@@ -200,6 +202,7 @@ not_a_number:
 
 exit_atoi:
 	pop rsi
+	pop edx
 	ret						; resulting int is stored in r15
 
 
