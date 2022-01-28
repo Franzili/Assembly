@@ -185,7 +185,7 @@ convert_atoi:
 	cmp rsi, ascii0			; decimal < 0 ? -> not a number
 	jl not_a_number
 	cmp rsi, ascii9			; decimal > 9 ? -> not a number
-	lg not_a_number
+	jg not_a_number
 
 	; digit between 0 and 9
 	sub rsi, ascii0			; convert char to decimal
@@ -196,7 +196,7 @@ convert_atoi:
 
 not_a_number:
 	pop rsi
-	r15, -1					; result -1 if input not a number
+	mov r15, -1				; result -1 if input not a number
 	ret
 
 exit_atoi:
