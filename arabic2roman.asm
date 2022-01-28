@@ -51,8 +51,8 @@ string_len:
 	mov r8, 0
 until_0byte_found:
 	inc r8
-	cmp [rsi], byte 0	; end of string?
-	jnz until_0byte_found
+	cmp [rsi], byte 0		; end of string?
+	jne until_0byte_found
 	ret
 
 
