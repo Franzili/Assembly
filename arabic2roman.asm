@@ -21,6 +21,12 @@ newline:
 ;;; space character
 blank:
     db 0x20
+;;; begin decimals in ASCII
+ascii0:
+	db 48
+;;; end decimals in ASCII
+ascii9:
+	db 57
 ;;; roman numerals
 num1: db 'I'
 num5: db 'V'
@@ -38,97 +44,107 @@ section	.text
 
 
 ;;;----------------------------------------------------------------------------
-;;; subroutine get_len
+;;; subroutine string_len
 ;;;----------------------------------------------------------------------------
 ;;; stores the length of a string in rsi into r8
 
 string_len:
 	mov r8, 0
-until_0byte:
+until_0byte_found:
 	inc r8
-	cmp [rsi], byte 0 ; end of string?
-	jnz until_0byte
+	cmp [rsi], byte 0	; end of string?
+	jnz until_0byte_found
 	ret
 
 
 ;;;----------------------------------------------------------------------------
-;;; subroutine print_thousands
+;;; subroutine print_digit
 ;;;----------------------------------------------------------------------------
-;;; prints thousands
+;;; prints a value given in r15 in roman numerals
+;;; r11 contains char for one, r12 char for five, r13 char for ten
 
-print_thousands:
+print_digit:
+	push r8
+	push r15
+	cmp r8, 9			; digit is a nine
+	je nine
+	cmp r8, 4			; digit is between 5 and 8
+	jg greater4
+	cmp r8, 4
+	je equal2_4
 
-
-;;;----------------------------------------------------------------------------
-;;; subroutine print_one
-;;;----------------------------------------------------------------------------
-;;; prints a one to stdout
-
-print_one:
-	mov r9, one
+nine:
+	mov r10, r11
 	call write_char
+	mov r10, r13
+
+greater4:				; digit between 5 and 8
+	mov r10, r12
+	call write_char
+	cmp r15, 5
+	je exit_block
+greater4_loop:
+	mov r10, r11
+	call write_char
+	dec r15
+	cmp r15, 6
+	jge greater4_loop
+	exit_block
+
+equal2_4:				; digit equal to 4
+	mov r10, r11
+	call write_char
+	mov r10, r12
+	call write_char
+
+exit_block:
+	pop r15
+	pop r8
 	ret
 
 
 ;;;----------------------------------------------------------------------------
 ;;; subroutine converting_tree
 ;;;----------------------------------------------------------------------------
-;;; evaluates the input-length in r8 and calls the corresponding subroutines
+;;; evaluates the input-length given in r8 and calls the corresponding
+;;; subroutines, value to print given in r9
+;;; r11 contains char for one, r12 char for five, r13 char for ten
 
 converting_tree:
-	cmp r8, 9
-	je 
-	cmp r8, 1
-	je print_one
-	cmp r8
+	cmp r8, 4
+	je thousands
+	cmp r8, 3
+	je hundreds
+	cmp r8, 2
+	je tens
 
+thousands:				; prints thousands
+	mov r10, num1000
+	call write_char
+	
+	mov r11, num100
+	mov r12, num500
+	mov r13, num1000
+	call print_digit
+						; print number range 100..900
 
+hundreds:
+	mov r11, num10
+	mov r12, num50
+	mov r13, num100
+	call print_digit
 
-;;;--------------------------------------------------------------------------
-;;; subroutine write_string
-;;;--------------------------------------------------------------------------
-
-write_string:
-	push	rax
-	push	rdi
-	push	rdx
-    mov rcx, 0  ; position in string
-    push    rcx
-    push    r9  ; inner loop variable
-writing_loop:
-    cmp [rsi], byte 0
-    je eos_found
-    mov r8, blank
-    mov r9, 0   ; inner loop variable
-blank_loop:
-    cmp r9, rcx
-    jge write_one_char
-    call write_char
-    inc r9
-    jmp blank_loop
-write_one_char:
-    mov r8, rsi
-    call write_char
-    mov r8, newline    ; newline
-    call write_char
-    inc rcx     ; current position in string
-	inc	rdx		; count
-	inc	rsi		; next position in string
-    jmp writing_loop
-eos_found:
-	;; here rdx contains the string length
-    pop r9
-    pop rcx
-    pop	rdx
-	pop	rdi
-	pop	rax
-	ret
+tens:
+	mov r11, mum1
+	mov r12, num5
+	mov r13, num10
+	call print_digit
 
 
 ;;;----------------------------------------------------------------------------
 ;;; subroutine write_char
 ;;;----------------------------------------------------------------------------
-;;; writes a character stored in r9 to stdout
+;;; writes a single character stored in r10 to stdout
 
 write_char:
 	;; save registers that are used in the code
@@ -136,22 +152,56 @@ write_char:
 	push	rdi
 	push	rsi
 	push	rdx
-    push    r9
+    push    r10
 	push    rcx
 	;; prepare arguments for write syscall
 	mov	rax, SYS_WRITE	; write syscall
 	mov	rdi, STDOUT		; fd = 1 (stdout)
-	mov	rsi, r9			; character to write
+	mov	rsi, r10		; character to write
 	mov	rdx, 1			; length
 	syscall				; system call
 	;; restore registers (in opposite order)
 	pop rcx
-    pop r9
+    pop r10
 	pop	rdx
 	pop	rsi
 	pop	rdi
 	pop	rax
 	ret
+
+
+;;;--------------------------------------------------------------------------
+;;; subroutine atoi
+;;;--------------------------------------------------------------------------
+;;; converts a string given in rsi to int/decimal
+
+atoi:
+	push rsi
+	mov r15, 0
+
+convert_atoi:
+	cmp [rsi], byte 0
+	je exit_atoi
+	cmp rsi, ascii0			; decimal < 0 ? -> not a number
+	jl not_a_number
+	cmp rsi, ascii9			; decimal > 9 ? -> not a number
+	lg not_a_number
+
+	; digit between 0 and 9
+	sub rsi, ascii0			; convert char to decimal
+	mul r15, 10				; next digit
+	add r15, rsi			; store next digit in r15
+	inc rsi					; next position in string
+	jmp convert_atoi
+
+not_a_number:
+	pop rsi
+	r15, -1					; result -1 if input not a number
+	ret
+
+exit_atoi:
+	pop rsi
+	ret						; resulting int is stored in r15
 
 
 ;;;--------------------------------------------------------------------------
@@ -167,8 +217,10 @@ read_args:
 	;; print command line arguments
 	pop	rsi					; argv[j]
 	call	string_len		; get string length
-	
-	call	write_string	; string in rsi is written to stdout
+	call 	atoi			; convert given string to int and store it in r15
+	mov r10, r15
+	call	write_char
+	call	converting_tree	; start converting
 	dec	rbx					; dec arg-index
 	jnz	read_args			; continue until last argument was printed
 exit:
