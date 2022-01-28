@@ -89,7 +89,7 @@ greater4_loop:
 	dec r15
 	cmp r15, 6
 	jge greater4_loop
-	exit_block
+	jmp exit_block
 
 equal2_4:				; digit equal to 4
 	mov r10, r11
