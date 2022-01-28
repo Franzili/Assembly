@@ -177,6 +177,7 @@ write_char:
 atoi:
 	push rsi
 	push rax
+	push r14
 	mov r15, 0
 
 convert_atoi:
@@ -202,8 +203,9 @@ not_a_number:
 	ret
 
 exit_atoi:
-	pop rsi
+	pop r14
 	pop rax
+	pop rsi
 	ret						; resulting int is stored in r15
 
 
