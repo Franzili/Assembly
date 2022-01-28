@@ -28,13 +28,13 @@ ascii0:
 ascii9:
 	db 57
 ;;; roman numerals
-krempel: 		db 'I'
-num5: 		db 'V'
-mum10: 		db 'X'
-num50: 		db 'L'
-num100: 	db 'C'
-num500: 	db 'D'
-num1000: 	db 'M'
+numeral1: 		db 'I'
+numeral5: 		db 'V'
+numeral10: 		db 'X'
+numeral50: 		db 'L'
+numeral100: 	db 'C'
+numeral500: 	db 'D'
+numeral1000: 	db 'M'
 
 ;;; start of code section
 section	.text
@@ -118,24 +118,24 @@ converting_tree:
 	je tens
 
 thousands:				; prints thousands
-	mov r10, num1000
+	mov r10, numeral1000
 	call write_char
 	
-	mov r11, num100
-	mov r12, num500
-	mov r13, num1000
+	mov r11, numeral100
+	mov r12, numeral500
+	mov r13, numeral1000
 	call print_digit
 						; ToDo: print number range 100..900
 
 hundreds:
-	mov r11, num10
-	mov r12, num50
-	mov r13, num100
+	mov r11, numeral10
+	mov r12, numeral50
+	mov r13, numeral100
 	call print_digit
 
 tens:
-	mov r11, krempel
-	mov r12, num5
+	mov r11, numeral1
+	mov r12, numeral5
 	mov r13, num10
 	call print_digit
 
