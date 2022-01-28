@@ -28,7 +28,7 @@ ascii0:
 ascii9:
 	db 57
 ;;; roman numerals
-num1: 		db 'I'
+krempel: 		db 'I'
 num5: 		db 'V'
 mum10: 		db 'X'
 num50: 		db 'L'
@@ -125,7 +125,7 @@ thousands:				; prints thousands
 	mov r12, num500
 	mov r13, num1000
 	call print_digit
-						; print number range 100..900
+						; ToDo: print number range 100..900
 
 hundreds:
 	mov r11, num10
@@ -134,7 +134,7 @@ hundreds:
 	call print_digit
 
 tens:
-	mov r11, mum1
+	mov r11, krempel
 	mov r12, num5
 	mov r13, num10
 	call print_digit
