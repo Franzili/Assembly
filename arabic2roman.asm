@@ -136,7 +136,7 @@ hundreds:
 tens:
 	mov r11, numeral1
 	mov r12, numeral5
-	mov r13, num10
+	mov r13, numeral10
 	call print_digit
 
 
