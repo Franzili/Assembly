@@ -214,6 +214,8 @@ not_a_number:
 	pop rax
 	pop rsi
 	mov r15, -1					; result -1 if input not a number
+	mov r10, debug
+	call write_char
 	ret
 
 exit_atoi:
