@@ -191,9 +191,9 @@ atoi:
 convert_atoi:
 	cmp [rsi], byte 0
 	je exit_atoi				; end of string found
-	cmp byte [rsi], ascii0		; decimal < 0 ? -> not a number
+	cmp byte [rsi], byte ascii0		; decimal < 0 ? -> not a number
 	jl not_a_number
-	cmp byte [rsi], ascii9		; decimal > 9 ? -> not a number
+	cmp byte [rsi], byte ascii9		; decimal > 9 ? -> not a number
 	jg not_a_number
 
 	; digit between 0 and 9
