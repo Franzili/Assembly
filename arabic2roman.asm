@@ -36,6 +36,9 @@ numeral100: 	db 'C'
 numeral500: 	db 'D'
 numeral1000: 	db 'M'
 
+;;; debugging prints
+debug:			db 'in convert'
+
 ;;; start of code section
 section	.text
 	;; this symbol has to be defined as entry point of the program
@@ -187,6 +190,8 @@ atoi:
 	mov r15, 0
 
 convert_atoi:
+	mov r10, debug
+	call write_char
 	cmp [rsi], byte 0
 	je exit_atoi
 	cmp rsi, ascii0			; decimal < 0 ? -> not a number
@@ -198,7 +203,7 @@ convert_atoi:
 	sub rsi, ascii0			; convert char to decimal
 	mov rax, rsi
 	mov r14, 10
-	mul r14					; next digit
+	mul r14					; next digit -> mul 10
 	add r15, rax			; store next digit in r15
 	inc rsi					; next position in string
 	jmp convert_atoi
