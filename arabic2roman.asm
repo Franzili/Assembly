@@ -49,10 +49,16 @@ section	.text
 
 string_len:
 	mov r8, 0
+	cmp [rsi], byte 0		; end of string?
+	je exit_string_len		; return
+
 until_0byte_found:
-	inc r8
+	inc rsi					; next position in string
+	inc r8					; increment counter
 	cmp [rsi], byte 0		; end of string?
 	jne until_0byte_found
+
+exit_string_len:
 	ret
 
 
@@ -229,7 +235,7 @@ read_args:
 	dec	rbx					; dec arg-index
 	jnz	read_args			; continue until last argument was printed
 exit:
-	;; exit program via syscall exit (necessary!)
+	;; exit program via syscall
 	mov	rax, SYS_EXIT		; exit syscall
 	mov	rdi, 0				; exit code 0 (= "ok")
 	syscall 				; kernel interrupt: system call
