@@ -235,11 +235,11 @@ read_args:
 	pop	rsi					; argv[j]
 	mov r10b, byte [rsi]
 	call	write_char
-	call	string_len		; get string length
+	call	string_len		; get string length and store it in r8
 	call 	stoi			; convert given string to int and store it in r15
 	mov r10, r15
 	call	write_char
-	; call	converting_tree	; start converting
+	call	converting_tree	; start converting
 	dec	rbx					; dec arg-index
 	jnz	read_args			; continue until last argument was printed
 
