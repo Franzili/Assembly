@@ -148,6 +148,7 @@ thousands_loop:
 
 hundereds:					; number range 100..900
 	mov rax, rdx			; rdx contains the division rest (modulo)
+	mov rdx, 0
 	mov r14, 100
 	div r14					; rdx/100
 	jz tens
@@ -160,6 +161,7 @@ hundereds:					; number range 100..900
 
 tens:						; number range 10..90
 	mov rax, rdx			; rdx contains the division rest (modulo)
+	mov rdx, 0
 	mov r14, 10
 	div r14					; rdx/10
 	jz one_digit
