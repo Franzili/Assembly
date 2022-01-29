@@ -204,6 +204,8 @@ convert_atoi:
 	mov r14, 10
 	mul r14						; next digit -> mul 10
 	add r15, [rax]				; store next digit in r15
+	mov r10, r15
+	call write_char
 	inc rsi						; next position in string
 	jmp convert_atoi
 
