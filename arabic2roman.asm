@@ -232,10 +232,11 @@ _start:
 	pop	rsi		; argv[j]
 	dec rbx
 	jz exit
+
 read_args:
 	;; print command line arguments
 	pop	rsi					; argv[j]
-	mov r10, byte [rsi]
+	mov r10, [rsi]
 	call	write_char
 	;call	string_len		; get string length
 	call 	atoi			; convert given string to int and store it in r15
@@ -247,6 +248,7 @@ read_args:
 
 	mov r10, newline		; add a newline in the end
 	call	write_char
+
 exit:
 	;; exit program via syscall
 	mov	rax, SYS_EXIT		; exit syscall
