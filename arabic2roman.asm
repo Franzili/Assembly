@@ -136,7 +136,7 @@ thousands:
 	mov rdx, 0
 	mov rax, r15
 	mov r14, 1000
-	div r14				; r15/1000, division rest in rdx
+	div r14					; r15/1000, division rest in rdx
 	jz hundereds
 
 	mov r9, rax				; store digit to print into r9
@@ -147,7 +147,6 @@ thousands_loop:
 	jnz thousands_loop
 
 hundereds:					; number range 100..900
-	mov rdx, 0
 	mov rax, rdx			; rdx contains the division rest (modulo)
 	mov r14, 100
 	div r14					; rdx/100
@@ -160,7 +159,6 @@ hundereds:					; number range 100..900
 	call print_digit
 
 tens:						; number range 10..90
-	mov rdx, 0
 	mov rax, rdx			; rdx contains the division rest (modulo)
 	mov r14, 10
 	div r14					; rdx/10
