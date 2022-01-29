@@ -236,7 +236,7 @@ _start:
 read_args:
 	;; print command line arguments
 	pop	rsi					; argv[j]
-	mov r10b, [sil]
+	mov r10b, byte [rsi]
 	call	write_char
 	;call	string_len		; get string length
 	call 	atoi			; convert given string to int and store it in r15
