@@ -135,8 +135,6 @@ converting_tree:			; input not in number range 0..9999
 	push r14
 
 thousands:
-	mov r10, debug
-	call write_char
 	mov rdx, 0
 	mov rax, r15
 	mov r14, 1000
@@ -146,6 +144,8 @@ thousands:
 	mov r9, rax				; store digit to print into r9
 	mov r10, numeral1000
 thousands_loop:
+	call write_char
+	mov r10, debug
 	call write_char
 	dec r9
 	jnz thousands_loop
