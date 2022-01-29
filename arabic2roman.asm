@@ -134,10 +134,9 @@ exit_block:
 converting_tree:			; input not in number range 0..9999
 	push r14
 
+thousands:
 	mov r10, debug
 	call write_char
-
-thousands:
 	mov rdx, 0
 	mov rax, r15
 	mov r14, 1000
