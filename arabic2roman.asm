@@ -209,8 +209,6 @@ convert_atoi:
 
 not_a_number:
 	mov r15, -1					; result -1 if input not a number
-	mov r10, debug
-	call write_char
 	mov r10, [rsi]
 	call write_char
 	pop r14
@@ -239,7 +237,7 @@ read_args:
 	pop	rsi					; argv[j]
 	mov r10, [rsi]
 	call	write_char
-	call	string_len		; get string length
+	;call	string_len		; get string length
 	call 	atoi			; convert given string to int and store it in r15
 	mov r10, r15
 	call	write_char
