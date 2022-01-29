@@ -234,6 +234,9 @@ read_args:
 	call	converting_tree	; start converting
 	dec	rbx					; dec arg-index
 	jnz	read_args			; continue until last argument was printed
+
+	mov r10, newline		; add a newline in the end
+	call	write_char
 exit:
 	;; exit program via syscall
 	mov	rax, SYS_EXIT		; exit syscall
