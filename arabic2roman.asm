@@ -130,10 +130,13 @@ exit_block:
 ;;; r11 contains char for one, r12 char for five, r13 char for ten
 
 converting_tree:			; input not in number range 0..9999
+	push r14
 
 thousands:
+	mov rdx, 0
 	mov rax, r15
-	div 1000				; division rest in rdx
+	mov r14, 1000
+	div r14				; r15/1000, division rest in rdx
 	jz hundereds
 
 	mov r9, rax				; store digit to print into r9
@@ -143,20 +146,24 @@ thousands_loop:
 	dec r9
 	jnz thousands_loop
 
-hundereds:
+hundereds:					; number range 100..900
+	mov rdx, 0
 	mov rax, rdx			; rdx contains the division rest (modulo)
-	div 100					; number range 100..900
+	mov r14, 100
+	div r14					; rdx/100
 	jz tens
 
-	mov r9, rax
+	mov r9, rax				; ratio in rax
 	mov r11, numeral100
 	mov r12, numeral500
 	mov r13, numeral1000
 	call print_digit
 
-tens:
+tens:						; number range 10..90
+	mov rdx, 0
 	mov rax, rdx			; rdx contains the division rest (modulo)
-	div 10					; number range 10..90
+	mov r14, 10
+	div r14					; rdx/10
 	jz one_digit
 
 	mov r9, rax
@@ -165,12 +172,16 @@ tens:
 	mov r13, numeral100
 	call print_digit
 
-one_digit:
+one_digit:					; number range 1..9
 	mov r9, rax
 	mov r11, numeral1
 	mov r12, numeral5
 	mov r13, numeral10
 	call print_digit
+
+exit_tree:
+	pop r14
+	ret
 
 
 ;;;----------------------------------------------------------------------------
