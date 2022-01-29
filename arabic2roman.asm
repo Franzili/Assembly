@@ -238,6 +238,7 @@ convert_stoi:
 	sub byte [rsi], 48			; convert char to decimal
 	mov al, byte [rsi]			; store digit in lower part of rax
 	add r15, rax				; add result of r15*10 to shift to next pos
+	mov rax, r15
 	mov r14, 10
 	mul r14						; next digit -> mul rax, 10 -> nextD*10 in rax
 	inc rsi						; next position in string
