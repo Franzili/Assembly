@@ -231,7 +231,7 @@ read_args:
 	call 	atoi			; convert given string to int and store it in r15
 	mov r10, r15
 	call	write_char
-	call	converting_tree	; start converting
+	; call	converting_tree	; start converting
 	dec	rbx					; dec arg-index
 	jnz	read_args			; continue until last argument was printed
 
