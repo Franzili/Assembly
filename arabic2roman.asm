@@ -84,6 +84,8 @@ print_digit:
 	je equal2_4
 	cmp r9, 4
 	jl smaller_4
+	mov r10, debug
+	write_char
 
 nine:
 	mov r10, r11
@@ -97,7 +99,7 @@ greater4:				; digit between 5 and 8
 	call write_char
 	cmp r9, 5
 	je exit_block
-greater4_loop:
+greater4_loop:			; digit between 6 and 8
 	mov r10, r11
 	call write_char
 	dec r9
