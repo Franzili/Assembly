@@ -62,6 +62,8 @@ until_0byte_found:
 	jne until_0byte_found
 
 exit_string_len:
+	mov r10, r8
+	call write_char
 	pop rsi
 	ret
 
