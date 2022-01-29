@@ -139,7 +139,8 @@ thousands:
 	mov rax, r15
 	mov r14, 1000
 	div r14					; r15/1000, division rest in rdx
-	jz hundereds
+	cmp rax, 0
+	je hundereds
 
 	mov r9, rax				; store digit to print into r9
 	mov r10, numeral1000
@@ -153,7 +154,8 @@ hundereds:					; number range 100..900
 	mov rdx, 0
 	mov r14, 100
 	div r14					; rdx/100
-	jz tens
+	cmp rax, 0
+	je tens
 
 	mov r9, rax				; ratio in rax
 	mov r11, numeral100
@@ -166,7 +168,8 @@ tens:						; number range 10..90
 	mov rdx, 0
 	mov r14, 10
 	div r14					; rdx/10
-	jz one_digit
+	cmp rax, 0
+	je one_digit
 
 	mov r9, rax
 	mov r11, numeral10
