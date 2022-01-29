@@ -190,8 +190,6 @@ atoi:
 	mov r15, 0
 
 convert_atoi:
-	mov r10, debug
-	call write_char
 	cmp [rsi], byte 0
 	je exit_atoi
 	cmp rsi, ascii0			; decimal < 0 ? -> not a number
@@ -200,6 +198,8 @@ convert_atoi:
 	jg not_a_number
 
 	; digit between 0 and 9
+	mov r10, debug
+	call write_char
 	sub rsi, ascii0			; convert char to decimal
 	mov rax, rsi
 	mov r14, 10
