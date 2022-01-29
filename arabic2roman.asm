@@ -163,8 +163,6 @@ write_char:
 	push	rdi
 	push	rsi
 	push	rdx
-    push    r10
-	push    rcx
 	;; prepare arguments for write syscall
 	mov	rax, SYS_WRITE	; write syscall
 	mov	rdi, STDOUT		; fd = 1 (stdout)
@@ -172,8 +170,6 @@ write_char:
 	mov	rdx, 1			; length
 	syscall				; system call
 	;; restore registers (in opposite order)
-	pop rcx
-    pop r10
 	pop	rdx
 	pop	rsi
 	pop	rdi
