@@ -63,7 +63,7 @@ until_0byte_found:
 
 exit_string_len:
 	mov r10, r8
-	call write_char
+	call write_char			; debugging
 	pop rsi
 	ret
 
