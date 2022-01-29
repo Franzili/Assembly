@@ -85,7 +85,7 @@ print_digit:
 	cmp r9, 4
 	jl smaller_4
 	mov r10, debug
-	write_char
+	call write_char
 
 nine:
 	mov r10, r11
