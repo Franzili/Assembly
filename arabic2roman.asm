@@ -233,11 +233,11 @@ convert_stoi:
 	jg not_a_number
 
 	; digit between 0 and 9
-	mov rax, r15
-	mov r14, 10
-	mul r14						; next digit -> mul rax, 10
 	sub byte [rsi], 48			; convert char to decimal
 	mov al, byte [rsi]			; store digit in lower part of rax
+	mov r15, rax
+	mov r14, 10
+	mul r14						; next digit -> mul rax, 10
 	add r15, rax				; add result of r15*10 to shift to next pos
 	inc rsi						; next position in string
 	jmp convert_stoi
