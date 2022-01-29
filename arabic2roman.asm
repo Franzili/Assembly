@@ -194,32 +194,32 @@ atoi:
 convert_atoi:
 	cmp [rsi], byte 0
 	je exit_atoi				; end of string found
-	cmp [rsi], ascii0			; decimal < 0 ? -> not a number
+	cmp byte [rsi], ascii0		; decimal < 0 ? -> not a number
 	jl not_a_number
-	cmp [rsi], ascii9			; decimal > 9 ? -> not a number
+	cmp byte [rsi], ascii9		; decimal > 9 ? -> not a number
 	jg not_a_number
 
 	; digit between 0 and 9
-	sub [rsi], ascii0			; convert char to decimal
-	mov rax, [rsi]
+	sub byte [rsi], ascii0		; convert char to decimal
+	mov rax, byte [rsi]
 	mov r14, 10
-	mul r14					; next digit -> mul 10
-	add r15, rax			; store next digit in r15
-	inc rsi					; next position in string
+	mul r14						; next digit -> mul 10
+	add r15, rax				; store next digit in r15
+	inc rsi						; next position in string
 	jmp convert_atoi
 
 not_a_number:
 	pop r14
 	pop rax
 	pop rsi
-	mov r15, -1				; result -1 if input not a number
+	mov r15, -1					; result -1 if input not a number
 	ret
 
 exit_atoi:
 	pop r14
 	pop rax
 	pop rsi
-	ret						; resulting int is stored in r15
+	ret							; resulting int is stored in r15
 
 
 ;;;--------------------------------------------------------------------------
