@@ -71,18 +71,19 @@ exit_string_len:
 ;;;----------------------------------------------------------------------------
 ;;; subroutine print_digit
 ;;;----------------------------------------------------------------------------
-;;; prints a value given in r15 in roman numerals
+;;; prints a value given in r9 in roman numerals
 ;;; r11 contains char for one, r12 char for five, r13 char for ten
 
 print_digit:
-	push r8
-	push r15
-	cmp r8, 9			; digit is a nine
+	push r9
+	cmp r9, 9			; digit is a nine
 	je nine
-	cmp r8, 4			; digit is between 5 and 8
+	cmp r9, 4			; digit is between 5 and 8
 	jg greater4
-	cmp r8, 4
+	cmp r9, 4
 	je equal2_4
+	cmp r9, 4
+	jl smaller_4
 
 nine:
 	mov r10, r11
@@ -108,9 +109,16 @@ equal2_4:				; digit equal to 4
 	mov r10, r12
 	call write_char
 
+smaller_4:
+	cmp r9, 1
+	jl exit_block		; exit when 1 reached
+	mov r10, r11
+	call write_char
+	dec r9
+	jmp smaller_4
+
 exit_block:
-	pop r15
-	pop r8
+	pop r9
 	ret
 
 
@@ -118,36 +126,47 @@ exit_block:
 ;;; subroutine converting_tree
 ;;;----------------------------------------------------------------------------
 ;;; evaluates the input-length given in r8 and calls the corresponding
-;;; subroutines, value to print given in r9
+;;; subroutines, value to print given in r15
 ;;; r11 contains char for one, r12 char for five, r13 char for ten
 
-converting_tree:
-	cmp r8, 4
-	je thousands
-	cmp r8, 3
-	je hundreds
-	cmp r8, 2
-	je tens
-	cmp r8, 1
-	je tens
-	ret					; input not in number range 0..9999
+converting_tree:			; input not in number range 0..9999
 
 thousands:
+	mov eax, r15
+	div 1000				; division rest in rdx
+	jz hundereds
+
+	mov r9, eax				; store digit to print into r9
 	mov r10, numeral1000
+thousands_loop:
 	call write_char
-	
+	dec r9
+	jnz thousands_loop
+
+hundereds:
+	mov eax, rdx			; rdx contains the division rest (modulo)
+	div 100					; number range 100..900
+	jz tens
+
+	mov r9, eax
 	mov r11, numeral100
 	mov r12, numeral500
 	mov r13, numeral1000
 	call print_digit
 
-hundreds:
+tens:
+	mov eax, rdx			; rdx contains the division rest (modulo)
+	div 10					; number range 10..90
+	jz one_digit
+
+	mov r9, eax
 	mov r11, numeral10
 	mov r12, numeral50
 	mov r13, numeral100
 	call print_digit
 
-tens:
+one_digit:
+	mov r9, eax
 	mov r11, numeral1
 	mov r12, numeral5
 	mov r13, numeral10
@@ -239,8 +258,6 @@ read_args:
 	call	write_char
 	call	string_len		; get string length and store it in r8
 	call 	stoi			; convert given string to int and store it in r15
-	mov r10, r15
-	call	write_char
 	call	converting_tree	; start converting
 	dec	rbx					; dec arg-index
 	jnz	read_args			; continue until last argument was printed
