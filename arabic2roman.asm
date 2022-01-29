@@ -193,7 +193,7 @@ atoi:
 
 convert_atoi:
 	cmp [rsi], byte 0
-	je exit_atoi
+	je exit_atoi				; end of string found
 	cmp [rsi], ascii0			; decimal < 0 ? -> not a number
 	jl not_a_number
 	cmp [rsi], ascii9			; decimal > 9 ? -> not a number
@@ -209,6 +209,8 @@ convert_atoi:
 	jmp convert_atoi
 
 not_a_number:
+	pop r14
+	pop rax
 	pop rsi
 	mov r15, -1				; result -1 if input not a number
 	ret
