@@ -112,7 +112,7 @@ equal2_4:				; digit equal to 4
 	call write_char
 
 smaller_4:
-	cmp r9, 1
+	cmp r9, 0
 	jl exit_block		; exit when 1 reached
 	mov r10, r11
 	call write_char
