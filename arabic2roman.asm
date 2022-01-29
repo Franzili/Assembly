@@ -203,15 +203,13 @@ convert_stoi:
 	mov r14, 10
 	mul r14						; next digit -> mul 10
 	add r15, rax				; store next digit in r15
-	mov r10, r15
+	mov r10, debug
 	call write_char
 	inc rsi						; next position in string
 	jmp convert_stoi
 
 not_a_number:
 	mov r15, -1					; result -1 if input not a number
-	mov r10, [rsi]
-	call write_char
 	pop r14
 	pop rax
 	pop rsi
