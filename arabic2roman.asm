@@ -217,6 +217,8 @@ exit_atoi:
 	pop r14
 	pop rax
 	pop rsi
+	mov r10, debug
+	call write_char
 	ret						; resulting int is stored in r15
 
 
