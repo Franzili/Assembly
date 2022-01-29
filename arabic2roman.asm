@@ -178,22 +178,22 @@ write_char:
 
 
 ;;;--------------------------------------------------------------------------
-;;; subroutine atoi
+;;; subroutine stoi
 ;;;--------------------------------------------------------------------------
 ;;; converts a string given in rsi to int/decimal
 
-atoi:
+stoi:
 	push rsi
 	push rax
 	push r14
 	mov r15, 0
 
-convert_atoi:
+convert_stoi:
 	cmp [rsi], byte 0
-	je exit_atoi				; end of string found
-	cmp byte [rsi], byte ascii0		; decimal < 0 ? -> not a number
+	je exit_stoi				; end of string found
+	cmp byte [rsi], 48		; decimal < 0 ? -> not a number
 	jl not_a_number
-	cmp byte [rsi], byte ascii9		; decimal > 9 ? -> not a number
+	cmp byte [rsi], 57		; decimal > 9 ? -> not a number
 	jg not_a_number
 
 	; digit between 0 and 9
@@ -206,7 +206,7 @@ convert_atoi:
 	mov r10, r15
 	call write_char
 	inc rsi						; next position in string
-	jmp convert_atoi
+	jmp convert_stoi
 
 not_a_number:
 	mov r15, -1					; result -1 if input not a number
@@ -217,7 +217,7 @@ not_a_number:
 	pop rsi
 	ret
 
-exit_atoi:
+exit_stoi:
 	pop r14
 	pop rax
 	pop rsi
@@ -240,7 +240,7 @@ read_args:
 	mov r10b, byte [rsi]
 	call	write_char
 	;call	string_len		; get string length
-	call 	atoi			; convert given string to int and store it in r15
+	call 	stoi			; convert given string to int and store it in r15
 	mov r10, r15
 	call	write_char
 	; call	converting_tree	; start converting
