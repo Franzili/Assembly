@@ -198,8 +198,6 @@ convert_atoi:
 	jg not_a_number
 
 	; digit between 0 and 9
-	mov r10, debug
-	call write_char
 	sub rsi, ascii0			; convert char to decimal
 	mov rax, rsi
 	mov r14, 10
@@ -211,6 +209,8 @@ convert_atoi:
 not_a_number:
 	pop rsi
 	mov r15, -1				; result -1 if input not a number
+	mov r10, debug
+	call write_char
 	ret
 
 exit_atoi:
