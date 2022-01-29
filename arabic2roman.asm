@@ -145,8 +145,6 @@ thousands:
 	mov r10, numeral1000
 thousands_loop:
 	call write_char
-	mov r10, debug
-	call write_char
 	dec r9
 	jnz thousands_loop
 
