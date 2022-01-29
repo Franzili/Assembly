@@ -132,11 +132,11 @@ exit_block:
 converting_tree:			; input not in number range 0..9999
 
 thousands:
-	mov eax, r15
+	mov rax, r15
 	div 1000				; division rest in rdx
 	jz hundereds
 
-	mov r9, eax				; store digit to print into r9
+	mov r9, rax				; store digit to print into r9
 	mov r10, numeral1000
 thousands_loop:
 	call write_char
@@ -144,29 +144,29 @@ thousands_loop:
 	jnz thousands_loop
 
 hundereds:
-	mov eax, rdx			; rdx contains the division rest (modulo)
+	mov rax, rdx			; rdx contains the division rest (modulo)
 	div 100					; number range 100..900
 	jz tens
 
-	mov r9, eax
+	mov r9, rax
 	mov r11, numeral100
 	mov r12, numeral500
 	mov r13, numeral1000
 	call print_digit
 
 tens:
-	mov eax, rdx			; rdx contains the division rest (modulo)
+	mov rax, rdx			; rdx contains the division rest (modulo)
 	div 10					; number range 10..90
 	jz one_digit
 
-	mov r9, eax
+	mov r9, rax
 	mov r11, numeral10
 	mov r12, numeral50
 	mov r13, numeral100
 	call print_digit
 
 one_digit:
-	mov r9, eax
+	mov r9, rax
 	mov r11, numeral1
 	mov r12, numeral5
 	mov r13, numeral10
