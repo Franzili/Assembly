@@ -37,7 +37,7 @@ numeral500: 	db 'D'
 numeral1000: 	db 'M'
 
 ;;; debugging prints
-debug:			db 'in convert'
+debug:			db '*'
 
 ;;; start of code section
 section	.text
