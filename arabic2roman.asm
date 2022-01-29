@@ -209,8 +209,6 @@ convert_atoi:
 not_a_number:
 	pop rsi
 	mov r15, -1				; result -1 if input not a number
-	mov r10, debug
-	call write_char
 	ret
 
 exit_atoi:
