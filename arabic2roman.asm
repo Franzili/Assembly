@@ -198,9 +198,9 @@ convert_stoi:
 
 	; digit between 0 and 9
 	sub byte [rsi], 48			; convert char to decimal
-	add r15, byte [rsi]			; store digit in r15
 	mov rax, 0
-	mov al, byte [rsi]			; put digit into rax for multiplication
+	mov al, byte [rsi]			; store digit in lower part of rax
+	add r15, rax				; store digit in r15
 	mov r14, 10
 	mul r14						; next digit -> mul rax, 10
 	inc rsi						; next position in string
