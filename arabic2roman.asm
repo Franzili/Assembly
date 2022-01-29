@@ -201,7 +201,7 @@ convert_atoi:
 	mov al, byte [rsi]			; put numeral into rax for multiplication
 	mov r14, 10
 	mul r14						; next digit -> mul 10
-	add r15, al					; store next digit in r15
+	add r15b, al					; store next digit in r15
 	mov r10, r15
 	call write_char
 	inc rsi						; next position in string
