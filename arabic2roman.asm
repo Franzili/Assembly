@@ -89,17 +89,19 @@ nine:
 	mov r10, r11
 	call write_char
 	mov r10, r13
+	call write_char
+	jmp exit_block
 
 greater4:				; digit between 5 and 8
 	mov r10, r12
 	call write_char
-	cmp r15, 5
+	cmp r9, 5
 	je exit_block
 greater4_loop:
 	mov r10, r11
 	call write_char
-	dec r15
-	cmp r15, 6
+	dec r9
+	cmp r9, 6
 	jge greater4_loop
 	jmp exit_block
 
@@ -127,7 +129,7 @@ exit_block:
 ;;;----------------------------------------------------------------------------
 ;;; evaluates the input-length given in r8 and calls the corresponding
 ;;; subroutines, value to print given in r15
-;;; r11 contains char for one, r12 char for five, r13 char for ten
+;;; r11 contains the char for one, r12 char for five, r13 char for ten
 
 converting_tree:			; input not in number range 0..9999
 	push r14
