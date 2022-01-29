@@ -128,8 +128,11 @@ converting_tree:
 	je hundreds
 	cmp r8, 2
 	je tens
+	cmp r8, 1
+	je tens
+	ret					; input not in number range 0..9999
 
-thousands:				; prints thousands
+thousands:
 	mov r10, numeral1000
 	call write_char
 	
@@ -137,7 +140,6 @@ thousands:				; prints thousands
 	mov r12, numeral500
 	mov r13, numeral1000
 	call print_digit
-						; ToDo: print number range 100..900
 
 hundreds:
 	mov r11, numeral10
