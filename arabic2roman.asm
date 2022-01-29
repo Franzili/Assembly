@@ -235,7 +235,7 @@ read_args:
 	pop	rsi					; argv[j]
 	mov r10b, byte [rsi]
 	call	write_char
-	;call	string_len		; get string length
+	call	string_len		; get string length
 	call 	stoi			; convert given string to int and store it in r15
 	mov r10, r15
 	call	write_char
