@@ -201,7 +201,7 @@ convert_atoi:
 
 	; digit between 0 and 9
 	sub byte [rsi], ascii0		; convert char to decimal
-	mov rax, byte [rsi]
+	mov rax, [rsi]
 	mov r14, 10
 	mul r14						; next digit -> mul 10
 	add r15, rax				; store next digit in r15
