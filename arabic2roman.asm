@@ -51,6 +51,7 @@ section	.text
 ;;; stores the length of a string in rsi into r8
 
 string_len:
+	push rsi
 	mov r8, 0
 	cmp [rsi], byte 0		; end of string?
 	je exit_string_len		; return
@@ -62,6 +63,7 @@ until_0byte_found:
 	jne until_0byte_found
 
 exit_string_len:
+	pop rsi
 	ret
 
 
