@@ -23,10 +23,10 @@ blank:
     db 0x20
 ;;; begin decimals in ASCII
 ascii0:
-	db 48
+	dd 48
 ;;; end decimals in ASCII
 ascii9:
-	db 57
+	dd 57
 ;;; roman numerals
 numeral1: 		db 'I'
 numeral5: 		db 'V'
@@ -35,7 +35,6 @@ numeral50: 		db 'L'
 numeral100: 	db 'C'
 numeral500: 	db 'D'
 numeral1000: 	db 'M'
-
 ;;; debugging prints
 debug:			db '*'
 
@@ -194,13 +193,13 @@ atoi:
 convert_atoi:
 	cmp [rsi], byte 0
 	je exit_atoi				; end of string found
-	cmp byte [rsi], ascii0		; decimal < 0 ? -> not a number
+	cmp dword [rsi], ascii0		; decimal < 0 ? -> not a number
 	jl not_a_number
-	cmp byte [rsi], ascii9		; decimal > 9 ? -> not a number
+	cmp dword [rsi], ascii9		; decimal > 9 ? -> not a number
 	jg not_a_number
 
 	; digit between 0 and 9
-	sub byte [rsi], ascii0		; convert char to decimal
+	sub dword [rsi], ascii0		; convert char to decimal
 	mov rax, [rsi]
 	mov r14, 10
 	mul r14						; next digit -> mul 10
