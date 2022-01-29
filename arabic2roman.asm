@@ -214,13 +214,15 @@ write_char:
 ;;;--------------------------------------------------------------------------
 ;;; subroutine stoi
 ;;;--------------------------------------------------------------------------
-;;; converts a string given in rsi to int/decimal
+;;; converts a string given in rsi to int/decimal and stores it in r15
 
 stoi:
 	push rsi
 	push rax
 	push r14
-	mov r15, 0
+	mov r14, 0
+	mov r15, 0					; r15 will contain the converted number
+	mov rax, 0
 
 convert_stoi:
 	cmp [rsi], byte 0
@@ -232,9 +234,9 @@ convert_stoi:
 
 	; digit between 0 and 9
 	sub byte [rsi], 48			; convert char to decimal
-	mov rax, 0
 	mov al, byte [rsi]			; store digit in lower part of rax
-	add r15, rax				; store digit in r15
+	add r15, rax				; add result of r15*10 to shift to next pos
+	mov rax, r15
 	mov r14, 10
 	mul r14						; next digit -> mul rax, 10
 	inc rsi						; next position in string
@@ -267,8 +269,6 @@ _start:
 read_args:
 	;; print command line arguments
 	pop	rsi					; argv[j]
-	mov r10b, byte [rsi]
-	call	write_char
 	call	string_len		; get string length and store it in r8
 	call 	stoi			; convert given string to int and store it in r15
 	call	converting_tree	; start converting
