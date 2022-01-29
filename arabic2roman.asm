@@ -228,15 +228,15 @@ exit_atoi:
 ;;;--------------------------------------------------------------------------
 
 _start:
-	pop	rbx		; argc (>= 1 guaranteed)
-	pop	rsi		; argv[j]
+	pop	rbx					; argc (>= 1 guaranteed)
+	pop	rsi					; argv[j]
 	dec rbx
 	jz exit
 
 read_args:
 	;; print command line arguments
 	pop	rsi					; argv[j]
-	mov r10, [rsi]
+	mov byte r10, [sil]
 	call	write_char
 	;call	string_len		; get string length
 	call 	atoi			; convert given string to int and store it in r15
