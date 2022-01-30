@@ -103,6 +103,7 @@ read_args:
 	pop	rsi					; argv[j]
     call read_line
     mov r10, buffer
+    mov r10, [r10 + 4]
     call write_char
 	dec	rbx					; dec arg-index
 	jnz	read_args			; continue until last argument was printed
