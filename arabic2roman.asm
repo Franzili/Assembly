@@ -110,60 +110,60 @@ exit_block:
 ;;; r11 contains the char for one, r12 char for five, r13 char for ten
 
 converting_tree:			; input not in number range 0..9999
-	push r14
+	push 	r14
 
 thousands:
-	mov rdx, 0
-	mov rax, r15
-	mov r14, 1000
-	div r14					; r15/1000, division rest in rdx
-	cmp rax, 0
-	je hundereds
+	mov 	rdx, 0
+	mov 	rax, r15
+	mov 	r14, 1000
+	div 	r14					; r15/1000, division rest in rdx
+	cmp 	rax, 0
+	je		hundereds
 
-	mov r9, rax				; store digit to print into r9
-	mov r10, numeral1000
+	mov 	r9, rax				; store digit to print into r9
+	mov 	r10, numeral1000
 thousands_loop:
-	call write_char
-	dec r9
-	jnz thousands_loop
+	call 	write_char
+	dec 	r9
+	jnz 	thousands_loop
 
-hundereds:					; number range 100..900
-	mov rax, rdx			; rdx contains the division rest (modulo)
-	mov rdx, 0
-	mov r14, 100
-	div r14					; rdx/100
-	cmp rax, 0
-	je tens
+hundereds:						; number range 100..900
+	mov 	rax, rdx			; rdx contains the division rest (modulo)
+	mov 	rdx, 0
+	mov 	r14, 100
+	div 	r14					; rdx/100
+	cmp 	rax, 0
+	je 		tens
 
-	mov r9, rax				; ratio in rax
-	mov r11, numeral100
-	mov r12, numeral500
-	mov r13, numeral1000
-	call print_digit
+	mov 	r9, rax				; ratio in rax
+	mov 	r11, numeral100
+	mov 	r12, numeral500
+	mov 	r13, numeral1000
+	call 	print_digit
 
-tens:						; number range 10..90
-	mov rax, rdx			; rdx contains the division rest (modulo)
-	mov rdx, 0
-	mov r14, 10
-	div r14					; rdx/10
-	cmp rax, 0
-	je one_digit
+tens:							; number range 10..90
+	mov 	rax, rdx			; rdx contains the division rest (modulo)
+	mov 	rdx, 0
+	mov 	r14, 10
+	div 	r14					; rdx/10
+	cmp 	rax, 0
+	je 		one_digit
 
-	mov r9, rax
-	mov r11, numeral10
-	mov r12, numeral50
-	mov r13, numeral100
-	call print_digit
+	mov 	r9, rax
+	mov 	r11, numeral10
+	mov 	r12, numeral50
+	mov 	r13, numeral100
+	call 	print_digit
 
-one_digit:					; number range 1..9
-	mov r9, rdx
-	mov r11, numeral1
-	mov r12, numeral5
-	mov r13, numeral10
-	call print_digit
+one_digit:						; number range 1..9
+	mov 	r9, rdx
+	mov 	r11, numeral1
+	mov 	r12, numeral5
+	mov 	r13, numeral10
+	call 	print_digit
 
 exit_tree:
-	pop r14
+	pop 	r14
 	ret
 
 
@@ -179,16 +179,16 @@ write_char:
 	push	rsi
 	push	rdx
 	;; prepare arguments for write syscall
-	mov	rax, SYS_WRITE	; write syscall
-	mov	rdi, STDOUT		; file descriptor = 1 (stdout)
-	mov	rsi, r10		; character to write
-	mov	rdx, 1			; length
-	syscall				; system call
+	mov		rax, SYS_WRITE	; write syscall
+	mov		rdi, STDOUT		; file descriptor = 1 (stdout)
+	mov		rsi, r10		; character to write
+	mov		rdx, 1			; length
+	syscall					; system call
 	;; restore registers (in opposite order)
-	pop	rdx
-	pop	rsi
-	pop	rdi
-	pop	rax
+	pop		rdx
+	pop		rsi
+	pop		rdi
+	pop		rax
 	ret
 
 
@@ -233,9 +233,9 @@ not_a_number:
 	ret
 
 exit_stoi:
-	pop r14
-	pop rax
-	pop rsi
+	pop 	r14
+	pop 	rax
+	pop 	rsi
 	ret								; resulting int is stored in r15
 
 
