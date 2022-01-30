@@ -69,6 +69,7 @@ read_line:
 	push	rsi
 	push	rdx
     xor     r9, r9          ; r9 will contain -1 if EOF reached
+    mov     r9, newline     ; r9 is also used to compare with newline
     mov     r8, buffer      ; reminder pointer to begin of line buffer
     mov     rsi, buffer     ; initialize rsi as pointer to linebuffer
     ;; prepare arguments for write syscall
@@ -79,14 +80,13 @@ read_one_char:
     mov	    rax, SYS_READ	; write syscall
 	syscall				    ; system call
     inc     rsi             ; next position in linebuffer
-    mov     r9, newline
     cmp     rax, 0          ; end of file reached?
     je      eof_reached     ; yes? -> set r9 to -1
     cmp     [rsi], r9       ; end of line reached?
-    jne     read_one_char   ; no? -> loop until newline found
+    jne     read_one_char   ; no? -> loop until newline or EOF found
 
 eof_reached:
-    mov     r9, -1
+    mov     r9, -1          ; signal for EOF reached
     pop	    rdx
 	pop	    rsi
 	pop	    rdi
@@ -122,7 +122,7 @@ write_buf_content:
 
 writing_loop:
     mov     r9, newline
-    cmp     [rsi], r9       ; end of line reached?
+    cmp     byte [rsi], newline       ; end of line reached?
     je      exit_write      ; exit
     mov	    rax, SYS_WRITE	; write syscall
 	syscall				    ; system call
