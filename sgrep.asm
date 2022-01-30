@@ -82,14 +82,14 @@ write_buf_content:
 	push	rdx
     push    r8
     mov     rsi, r8         ; set rsi to begin of linebuffer
+    ;; prepare arguments for write syscall
+	mov	    rdi, STDOUT		; file descriptor = 1 (stdout)
+	mov	    rdx, 1			; length
 
 writing_loop:
     cmp     rsi, EOF        ; end of file reached?
     je      exit_write      ; exit
-    ;; prepare arguments for write syscall
     mov	    rax, SYS_WRITE	; write syscall
-	mov	    rdi, STDOUT		; file descriptor = 1 (stdout)
-	mov	    rdx, 1			; length
 	syscall				    ; system call
     inc     rsi             ; next position in linebuffer
     jmp writing_loop
@@ -143,8 +143,7 @@ read_args:
 	;; print command line arguments
 	pop	rsi					; argv[j]
     call read_line
-    mov r10, buffer
-    call write_char
+    call write_buf_content
 	dec	rbx					; dec arg-index
 	jnz	read_args			; continue until last argument was printed
 
