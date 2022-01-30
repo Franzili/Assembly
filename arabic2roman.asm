@@ -46,53 +46,56 @@ global _start
 ;;; r11 contains char for one, r12 char for five, r13 char for ten
 
 print_digit:
-	push r9
-	cmp r9, 9			; digit is a nine
-	je nine
-	cmp r9, 4			; digit is between 5 and 8
-	jg greater4
-	cmp r9, 4
-	je equal2_4
-	cmp r9, 4
-	jl smaller_4
+	push 	r9
+	cmp 	r9, 9			; digit is a nine
+	je 		nine
+	cmp 	r9, 4			; digit is between 5 and 8
+	jg 		greater4
+	cmp 	r9, 4
+	je 		equal2_4
+	cmp 	r9, 4
+	jl 		smaller_4
 	; NaN
-	mov r10, debug
-	call write_char
+	mov 	r10, debug
+	call 	write_char
 
 nine:
-	mov r10, r11
-	call write_char
-	mov r10, r13
-	call write_char
-	jmp exit_block
+	mov 	r10, r11
+	call 	write_char
+	mov 	r10, r13
+	call 	write_char
+	jmp 	exit_block
 
-greater4:				; digit between 5 and 8
-	mov r10, r12
-	call write_char
-	cmp r9, 5
-	je exit_block
-greater4_loop:			; digit between 6 and 8
-	mov r10, r11
-	call write_char
-	dec r9
-	cmp r9, 6
-	jge greater4_loop
-	jmp exit_block
+; digit between 5 and 8
+greater4:
+	mov 	r10, r12
+	call 	write_char
+	cmp 	r9, 5
+	je 		exit_block
+; digit between 6 and 8
+greater4_loop:
+	mov 	r10, r11
+	call 	write_char
+	dec 	r9
+	cmp 	r9, 6
+	jge 	greater4_loop
+	jmp 	exit_block
 
-equal2_4:				; digit equal to 4
-	mov r10, r11
-	call write_char
-	mov r10, r12
-	call write_char
+; digit equal to 4
+equal2_4:
+	mov 	r10, r11
+	call 	write_char
+	mov 	r10, r12
+	call 	write_char
 
 smaller_4:
-	mov r10, r11
+	mov 	r10, r11
 smaller_4_loop:
-	cmp r9, 0
-	jle exit_block		; exit when 0 reached
-	call write_char
-	dec r9
-	jmp smaller_4_loop
+	cmp 	r9, 0
+	jle 	exit_block		; exit when 0 reached
+	call 	write_char
+	dec 	r9
+	jmp 	smaller_4_loop
 
 exit_block:
 	pop r9
