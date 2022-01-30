@@ -58,7 +58,7 @@ read_one_char:
 	syscall				    ; system call
     inc     rsi             ; next position in linebuffer
     cmp     rax, 0          ; end of file reached?
-    jne read_one_char
+    jne read_one_char       ; no? -> loop until EOF found
 
 exit_read:
     ;; restore registers (in opposite order)
@@ -82,14 +82,14 @@ write_buf_content:
 	push	rdx
     push    r8
     mov     rsi, r8         ; set rsi to begin of linebuffer
-    ;; prepare arguments for write syscall
-	mov	    rdi, STDOUT		; file descriptor = 1 (stdout)
-	mov	    rdx, 1			; length
 
 writing_loop:
     cmp     rsi, EOF        ; end of file reached?
     je      exit_write      ; exit
+    ;; prepare arguments for write syscall
     mov	    rax, SYS_WRITE	; write syscall
+	mov	    rdi, STDOUT		; file descriptor = 1 (stdout)
+	mov	    rdx, 1			; length
 	syscall				    ; system call
     inc     rsi             ; next position in linebuffer
     jmp writing_loop
