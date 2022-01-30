@@ -1,3 +1,10 @@
+// =================================================================================
+// Quine-McCluskey
+// Franziska Niemeyer
+// 
+// Rust implementation of Quine-McCluskey for minimization of switching functions
+// =================================================================================
+
 use std::collections::HashSet;
 use std::io::Result;
 use std::ops::Range;
