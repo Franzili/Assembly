@@ -31,8 +31,8 @@ buffer:         resb 128
 
 ;;; start of code section
 section	.text
-	;; this symbol has to be defined as entry point of the program
-	global _start
+;; this symbol has to be defined as entry point of the program
+global _start
 
 
 ;;;--------------------------------------------------------------------------
