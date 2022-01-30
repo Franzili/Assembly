@@ -84,6 +84,7 @@ print_digit:
 	je equal2_4
 	cmp r9, 4
 	jl smaller_4
+	; NaN
 	mov r10, debug
 	call write_char
 
