@@ -165,7 +165,7 @@ newline_found:
 word_found:
     mov     r10, debug
     call    write_char
-    call    write_buf_content      ; write line containing the word
+    call    write_buf_content   ; write line containing the word
     jmp     exit_sgrep
 
 not_found:
