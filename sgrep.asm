@@ -21,10 +21,12 @@ section .data
 newline:        db 0x0a
 ;;; space character
 blank:          db 0x20
-;;; linebuffer of size 128 byte to store 128 ASCII characters
-buffer:         resb 128
 ;;; debugging prints
 debug:			db '*'
+
+section .bss
+;;; linebuffer of size 128 byte to store 128 ASCII characters
+buffer:         resb 128
 
 ;;; start of code section
 section	.text
