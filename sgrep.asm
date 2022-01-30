@@ -41,26 +41,36 @@ section	.text
 ;;; store pointer to begin of linebuffer in r8
 
 read_line:
-    mov r8, buffer      ; pointer to begin of line buffer
-
-read_one_char:
-	;; save registers that are used in the code
+    ;; save registers that are used in the code
 	push	rax
 	push	rdi
 	push	rsi
 	push	rdx
+    push    r8
+    push    r9
+    xor     r9, r9          ; mov r9, 0 -> pointer offset to buffer
+    mov     r8, buffer      ; reminder pointer to begin of line buffer
+    mov     rsi, buffer     ; initialize rsi as pointer to linebuffer
+
+read_one_char:
 	;; prepare arguments for write syscall
-	mov	rax, SYS_READ	; write syscall
-	mov	rdi, STDIN		; file descriptor = 0 (stdin)
-	mov	rsi, buffer		; set pointer to next position in linebuffer
-	mov	rdx, 1			; length -> one character
-	syscall				; system call
-	;; restore registers (in opposite order)
-	pop	rdx
-	pop	rsi
-	pop	rdi
-	pop	rax
-	ret
+	mov	    rax, SYS_READ	; write syscall
+	mov	    rdi, STDIN		; file descriptor = 0 (stdin)
+    add     rsi, r9         ; set pointer to next posiotion in linebuffer
+	mov	    rdx, 1			; length -> one character
+	syscall				    ; system call
+    cmp     eax, 0          ; end of file reached?
+    jne read_one_char
+
+exit_read:
+    ;; restore registers (in opposite order)
+    pop     r9
+    pop     r8
+    pop	    rdx
+	pop	    rsi
+	pop	    rdi
+	pop	    rax
+    ret
 
 
 ;;;----------------------------------------------------------------------------
