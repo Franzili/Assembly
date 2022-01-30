@@ -80,30 +80,30 @@ write_buf_content:
 	push	rdi
 	push	rsi
 	push	rdx
-    push    r9
     push    r8
-    inc     r9                  ; next char after newline
-    mov     rsi, r9             ; set rsi to begin of line
+    push    r9
+    inc     r9              ; next char after newline
+    mov     rsi, r9         ; set rsi to begin of line
     xor     r8, r8
-
     ;; prepare arguments for write syscall
-	mov	    rdi, STDOUT		    ; file descriptor = 1 (stdout)
-	mov	    rdx, 1			    ; length
+	mov	    rdi, STDOUT		; file descriptor = 1 (stdout)
+	mov	    rdx, 1			; length
 
 writing_loop:
-    cmp     [rsi], r8           ; end reached?
-    je      exit_write          ; exit
-    cmp     [rsi], byte 0x0a    ; next newline reached?
-    je      exit_write          ; exit
-    mov	    rax, SYS_WRITE	    ; write syscall
-	syscall				        ; system call
-    inc     rsi                 ; next position in linebuffer
+    mov     r8b, [rsi]
+    cmp     r8b, byte 0     ; end reached?
+    je      exit_write      ; exit
+    cmp     r8b, byte 0x0a  ; next newline reached?
+    je      exit_write      ; exit
+    mov	    rax, SYS_WRITE	; write syscall
+	syscall				    ; system call
+    inc     rsi             ; next position in linebuffer
     jmp     writing_loop
 
 exit_write:
 	;; restore registers (in opposite order)
-    pop     r8
     pop     r9
+    pop     r8
 	pop	    rdx
 	pop	    rsi
 	pop	    rdi
