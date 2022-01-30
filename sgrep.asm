@@ -53,7 +53,7 @@ read_one_char:
 	mov	rax, SYS_READ	; write syscall
 	mov	rdi, STDIN		; file descriptor = 0 (stdin)
 	mov	rsi, buffer		; set pointer to next position in linebuffer
-	mov	rdx, 4			; length -> one character
+	mov	rdx, 1			; length -> one character
 	syscall				; system call
 	;; restore registers (in opposite order)
 	pop	rdx
@@ -103,7 +103,6 @@ read_args:
 	pop	rsi					; argv[j]
     call read_line
     mov r10, buffer
-    mov r10, [r10 + 4]
     call write_char
 	dec	rbx					; dec arg-index
 	jnz	read_args			; continue until last argument was printed
