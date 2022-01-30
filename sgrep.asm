@@ -88,9 +88,9 @@ write_buf_content:
 	mov	    rdx, 1			    ; length
 
 writing_loop:
-    cmp     [rsi], byte 0       ; end reached?
+    cmp     [rsi], 0            ; end reached?
     je      exit_write          ; exit
-    cmp     [rsi], byte 0x0a    ; next newline reached?
+    cmp     [rsi], 0x0a         ; next newline reached?
     je      exit_write          ; exit
     mov	    rax, SYS_WRITE	    ; write syscall
 	syscall				        ; system call
