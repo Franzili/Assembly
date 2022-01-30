@@ -24,6 +24,7 @@ newline:        db 0x0a
 blank:          db 0x20
 ;;; debugging prints
 debug:			db '*'
+debug2:         db '-'
 
 section .bss
 ;;; linebuffer of size 128 byte to store 128 ASCII characters
@@ -110,6 +111,61 @@ exit_write:
 
 
 ;;;----------------------------------------------------------------------------
+;;; subroutine sgrep
+;;;----------------------------------------------------------------------------
+;;; searches for the given comandline argument in a given line
+;;; r8 contains pointer to begin of string buffer
+
+sgrep:
+    push    rsi
+    push    r9
+    xor     r9, r9              ; will contain pointer to last newline in buffer
+    mov     r10, rsi            ; pointer to begin of word to search for
+    mov     r11, r8             ; r11 contains current position in string buffer
+    xor     r12, r12            ; contains the number of matched chars
+
+search_word:
+    cmp     [r10], byte 0       ; complete word found?
+    je      word_found
+    cmp     [r11], byte 0       ; word not found
+    je      not_found
+    cmp     [r11], [r10]        ; chars match?
+    je     chars_match
+    cmp     [r11], byte 0x0a    ; newline found
+    je      newline_found
+    ; no match
+    mov     r10, rsi            ; reset pointer to begin of word to search for
+    sub     r11, r12            ; jump back in string buffer
+    xor     r12, r12            ; reset number of matched chars
+    jmp search_word
+
+chars_match:
+    inc     r10                 ; next position in word to search for
+    inc     r11                 ; next position in string buffer
+    inc     r12                 ; increment number of matched chars
+    jmp search_word
+
+
+newline_found:
+    mov     r9, rsi
+
+word_found:
+    mov     r10, debug
+    call    write_char
+    ret
+
+not_found:
+    mov     r10, debug2
+    call    write_char
+    ret
+
+exit_sgrep:
+    pop     r9
+    pop     rsi
+    ret
+
+
+;;;----------------------------------------------------------------------------
 ;;; subroutine write_char
 ;;;----------------------------------------------------------------------------
 ;;; writes a single character stored in r10 to stdout
@@ -145,9 +201,9 @@ _start:
 	jz      exit
 
 read_args:
-	;; print command line arguments
+    call    read_input          ; store input in the buffer
 	pop	    rsi					; argv[j]
-    call    read_input
+    call    sgrep
     call    write_buf_content
 	dec	    rbx					; dec arg-index
 	jnz	    read_args			; continue until last argument was printed
