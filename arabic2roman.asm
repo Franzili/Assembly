@@ -177,7 +177,7 @@ write_char:
 	push	rdx
 	;; prepare arguments for write syscall
 	mov	rax, SYS_WRITE	; write syscall
-	mov	rdi, STDOUT		; fd = 1 (stdout)
+	mov	rdi, STDOUT		; file descriptor = 1 (stdout)
 	mov	rsi, r10		; character to write
 	mov	rdx, 1			; length
 	syscall				; system call

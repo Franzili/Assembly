@@ -13,6 +13,7 @@
 %define SYS_EXIT	60
 ;;; file ids
 %define STDOUT		1
+%define STDIN       0
 
 ;;; start of data section
 section .data
@@ -36,6 +37,26 @@ section	.text
 ;;;--------------------------------------------------------------------------
 ;;; reads a line from STDIN and stores it in the linebuffer
 
+read_line:
+
+read_one_char:
+	;; save registers that are used in the code
+	push	rax
+	push	rdi
+	push	rsi
+	push	rdx
+	;; prepare arguments for write syscall
+	mov	rax, SYS_READ	; write syscall
+	mov	rdi, STDIN		; file descriptor = 0 (stdin)
+	mov	rsi, r10		; character to write
+	mov	rdx, 1			; length
+	syscall				; system call
+	;; restore registers (in opposite order)
+	pop	rdx
+	pop	rsi
+	pop	rdi
+	pop	rax
+	ret
 
 
 
