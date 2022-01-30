@@ -90,6 +90,7 @@ write_buf_content:
 	mov	    rdx, 1			; length
 
 writing_loop:
+    mov     r10, [rsi]
     cmp     [rsi], r9       ; end of line reached?
     je      exit_write      ; exit
     mov	    rax, SYS_WRITE	; write syscall
