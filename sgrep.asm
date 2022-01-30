@@ -81,16 +81,19 @@ write_buf_content:
 	push	rsi
 	push	rdx
     push    r9
+    push    r8
     inc     r9                  ; next char after newline
     mov     rsi, r9             ; set rsi to begin of line
+    xor     r8, r8
+
     ;; prepare arguments for write syscall
 	mov	    rdi, STDOUT		    ; file descriptor = 1 (stdout)
 	mov	    rdx, 1			    ; length
 
 writing_loop:
-    cmp     [rsi], 0            ; end reached?
+    cmp     [rsi], r8           ; end reached?
     je      exit_write          ; exit
-    cmp     [rsi], 0x0a         ; next newline reached?
+    cmp     [rsi], byte 0x0a    ; next newline reached?
     je      exit_write          ; exit
     mov	    rax, SYS_WRITE	    ; write syscall
 	syscall				        ; system call
@@ -99,6 +102,7 @@ writing_loop:
 
 exit_write:
 	;; restore registers (in opposite order)
+    pop     r8
     pop     r9
 	pop	    rdx
 	pop	    rsi
