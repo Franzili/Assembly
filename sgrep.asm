@@ -153,12 +153,12 @@ newline_found:
 word_found:
     mov     r10, debug
     call    write_char
-    ret
+    exit_sgrep
 
 not_found:
     mov     r10, debug2
     call    write_char
-    ret
+    exit_sgrep
 
 exit_sgrep:
     pop     r9
