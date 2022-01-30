@@ -181,7 +181,7 @@ tens:						; number range 10..90
 	call print_digit
 
 one_digit:					; number range 1..9
-	mov r9, rax
+	mov r9, rdx
 	mov r11, numeral1
 	mov r12, numeral5
 	mov r13, numeral10
