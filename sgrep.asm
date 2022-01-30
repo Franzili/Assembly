@@ -90,7 +90,7 @@ write_buf_content:
 	mov	    rdx, 1			; length
 
 writing_loop:
-    mov     r8b, [sil]
+    mov     r8b, byte [rsi]
     cmp     r8b, byte 0     ; end reached?
     je      exit_write      ; exit
     cmp     r8b, byte 0x0a  ; next newline reached?
