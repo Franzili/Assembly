@@ -1,7 +1,7 @@
 ; =============================================================================
 ; 
-; schraeg.asm --
-; prints command line arguments at an angle
+; arabic2roman.asm --
+; takes an arabic number from input and prints it in roman numerals
 ;
 ; Franziska Niemeyer
 ; 
@@ -12,7 +12,7 @@
 %define SYS_EXIT	60
 ;;; file ids
 %define STDOUT		1
-	
+
 ;;; start of data section
 section .data
 ;;; a newline character
@@ -21,12 +21,9 @@ newline:
 ;;; space character
 blank:
     db 0x20
-;;; begin decimals in ASCII
-ascii0:
-	dw 48
-;;; end decimals in ASCII
-ascii9:
-	dw 57
+;;; decimals in ASCII
+ascii0: dw 48
+ascii9: dw 57
 ;;; roman numerals
 numeral1: 		db 'I'
 numeral5: 		db 'V'
