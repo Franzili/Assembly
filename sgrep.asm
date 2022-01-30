@@ -62,7 +62,6 @@ read_one_char:
 
 exit_read:
     ;; restore registers (in opposite order)
-    pop     r9
     pop	    rdx
 	pop	    rsi
 	pop	    rdi
