@@ -49,12 +49,12 @@ read_line:
 	push	rdx
     mov     r8, buffer      ; reminder pointer to begin of line buffer
     mov     rsi, buffer     ; initialize rsi as pointer to linebuffer
-
-read_one_char:
-	;; prepare arguments for write syscall
+    ;; prepare arguments for write syscall
 	mov	    rax, SYS_READ	; write syscall
 	mov	    rdi, STDIN		; file descriptor = 0 (stdin)
 	mov	    rdx, 1			; length -> one character
+
+read_one_char:
 	syscall				    ; system call
     inc     rsi             ; next position in linebuffer
     cmp     eax, 0          ; end of file reached?
@@ -67,6 +67,41 @@ exit_read:
 	pop	    rdi
 	pop	    rax
     ret
+
+
+;;;----------------------------------------------------------------------------
+;;; subroutine write_buf_content
+;;;----------------------------------------------------------------------------
+;;; writes the linebuffer content (pointer to start in r8) to STOUT
+
+write_buf_content:
+    ;; save registers that are used in the code
+    push	rax
+	push	rdi
+	push	rsi
+	push	rdx
+    push    r8
+    mov     rsi, r8         ; set rsi to begin of linebuffer
+    ;; prepare arguments for write syscall
+	mov	    rax, SYS_WRITE	; write syscall
+	mov	    rdi, STDOUT		; file descriptor = 1 (stdout)
+	mov	    rdx, 1			; length
+
+writing_loop:
+    cmp     rsi, EOF        ; end of file reached?
+    je      exit_write      ; exit
+	syscall				    ; system call
+    inc     rsi             ; next position in linebuffer
+    jmp writing_loop
+
+exit_write:
+	;; restore registers (in opposite order)
+    pop     r8
+	pop	    rdx
+	pop	    rsi
+	pop	    rdi
+	pop	    rax
+	ret
 
 
 ;;;----------------------------------------------------------------------------
@@ -87,41 +122,6 @@ write_char:
 	mov	    rdx, 1			; length
 	syscall				    ; system call
 	;; restore registers (in opposite order)
-	pop	    rdx
-	pop	    rsi
-	pop	    rdi
-	pop	    rax
-	ret
-
-
-;;;----------------------------------------------------------------------------
-;;; subroutine write_buf_content
-;;;----------------------------------------------------------------------------
-;;; writes the linebuffer content (pointer to start in r8) to STOUT
-
-write_buf_content:
-    ;; save registers that are used in the code
-    push	rax
-	push	rdi
-	push	rsi
-	push	rdx
-    push    r8
-    mov     rsi, r8         ; set rsi to begin of linebuffer
-
-writing_loop:
-    cmp     rsi, EOF        ; end of file reached?
-    je      exit_write      ; exit
-	;; prepare arguments for write syscall
-	mov	    rax, SYS_WRITE	; write syscall
-	mov	    rdi, STDOUT		; file descriptor = 1 (stdout)
-	mov	    rdx, 1			; length
-	syscall				    ; system call
-    inc     rsi              ; next position in linebuffer
-    jmp writing_loop
-
-exit_write:
-	;; restore registers (in opposite order)
-    pop     r8
 	pop	    rdx
 	pop	    rsi
 	pop	    rdi
