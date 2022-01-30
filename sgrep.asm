@@ -125,13 +125,15 @@ sgrep:
     xor     r12, r12            ; contains the number of matched chars
 
 search_word:
-    cmp     [r10], byte 0       ; complete word found?
+    mov     r13b, [r10]         ; next char in word to search for
+    mov     r14b, [r11]         ; next char in string buffer
+    cmp     r13b, byte 0        ; complete word found?
     je      word_found
-    cmp     [r11], byte 0       ; word not found
+    cmp     r14b, byte 0        ; word not found
     je      not_found
-    cmp     [r11], [r10]        ; chars match?
+    cmp     r14b, r13b          ; chars match?
     je     chars_match
-    cmp     [r11], byte 0x0a    ; newline found
+    cmp     r14b, byte 0x0a     ; newline found
     je      newline_found
     ; no match
     mov     r10, rsi            ; reset pointer to begin of word to search for
@@ -144,7 +146,6 @@ chars_match:
     inc     r11                 ; next position in string buffer
     inc     r12                 ; increment number of matched chars
     jmp search_word
-
 
 newline_found:
     mov     r9, rsi
