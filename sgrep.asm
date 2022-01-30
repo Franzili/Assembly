@@ -35,3 +35,35 @@ debug:			db '*'
 section	.text
 	;; this symbol has to be defined as entry point of the program
 	global _start
+
+
+
+
+
+;;;--------------------------------------------------------------------------
+;;; main entry
+;;;--------------------------------------------------------------------------
+
+_start:
+	pop	rbx					; argc (>= 1 guaranteed)
+	pop	rsi					; argv[j]
+	dec rbx
+	jz exit
+
+read_args:
+	;; print command line arguments
+	pop	rsi					; argv[j]
+	call	string_len		; get string length and store it in r8
+	call 	stoi			; convert given string to int and store it in r15
+	call	converting_tree	; start converting
+	dec	rbx					; dec arg-index
+	jnz	read_args			; continue until last argument was printed
+
+	mov r10, newline		; add a newline in the end
+	call	write_char
+
+exit:
+	;; exit program via syscall
+	mov	rax, SYS_EXIT		; exit syscall
+	mov	rdi, 0				; exit code 0 (= "ok")
+	syscall 				; kernel interrupt: system call

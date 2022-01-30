@@ -266,7 +266,7 @@ exit_stoi:
 
 _start:
 	pop	rbx					; argc (>= 1 guaranteed)
-	pop	rsi					; argv[j]
+	pop	rsi					; argv[j] -> programm name
 	dec rbx
 	jz exit
 
