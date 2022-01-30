@@ -90,7 +90,7 @@ eof_reached:
     pop	    rdx
 	pop	    rsi
 	pop	    rdi
-	pop	    rax+
+	pop	    rax
     ret
 
 exit_read:
