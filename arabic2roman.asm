@@ -276,11 +276,12 @@ read_args:
 	call	string_len		; get string length and store it in r8
 	call 	stoi			; convert given string to int and store it in r15
 	call	converting_tree	; start converting
-	dec	rbx					; dec arg-index
-	jnz	read_args			; continue until last argument was printed
 
 	mov r10, newline		; add a newline in the end
 	call	write_char
+	
+	dec	rbx					; dec arg-index
+	jnz	read_args			; continue until last argument was printed
 
 exit:
 	;; exit program via syscall
