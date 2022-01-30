@@ -126,10 +126,12 @@ sgrep:
     push    r10
     push    r11
     push    r12
+    push    r13
     mov     r9, r11             ; will contain pointer to last newline in buffer
     mov     r10, rsi            ; pointer to begin of word to search for
     mov     r11, r8             ; r11 contains current position in string buffer
     xor     r12, r12            ; contains the number of matched chars
+    xor     r13, r13
 
 search_word:
     mov     r13b, [r10]         ; next char in word to search for
@@ -171,6 +173,7 @@ not_found:
     jmp exit_sgrep
 
 exit_sgrep:
+    pop     r13
     pop     r12
     pop     r11
     pop     r10
