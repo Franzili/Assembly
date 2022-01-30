@@ -86,6 +86,7 @@ write_buf_content:
     push    r9
     inc     r9              ; next char after newline
     mov     rsi, r9         ; set rsi to begin of line
+    xor     r8, r8
     ;; prepare arguments for write syscall
 	mov	    rdi, STDOUT		; file descriptor = 1 (stdout)
 	mov	    rdx, 1			; length
