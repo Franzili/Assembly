@@ -20,8 +20,6 @@
 section .data
 ;;; a newline character
 newline:            db 0x0a
-;;; space character
-blank:              db 0x20
 ;;; debugging prints
 debug:			    db '*'
 debug2:             db '-'
@@ -82,30 +80,26 @@ write_buf_content:
 	push	rdi
 	push	rsi
 	push	rdx
-    push    r8
     push    r9
-    inc     r9              ; next char after newline
-    mov     rsi, r9         ; set rsi to begin of line
-    xor     r8, r8
+    inc     r9                  ; next char after newline
+    mov     rsi, r9             ; set rsi to begin of line
     ;; prepare arguments for write syscall
-	mov	    rdi, STDOUT		; file descriptor = 1 (stdout)
-	mov	    rdx, 1			; length
+	mov	    rdi, STDOUT		    ; file descriptor = 1 (stdout)
+	mov	    rdx, 1			    ; length
 
 writing_loop:
-    mov     r8b, byte [rsi]
-    cmp     r8b, byte 0     ; end reached?
-    je      exit_write      ; exit
-    cmp     r8b, byte 0x0a  ; next newline reached?
-    je      exit_write      ; exit
-    mov	    rax, SYS_WRITE	; write syscall
-	syscall				    ; system call
-    inc     rsi             ; next position in linebuffer
+    cmp     [rsi], byte 0       ; end reached?
+    je      exit_write          ; exit
+    cmp     [rsi], byte 0x0a    ; next newline reached?
+    je      exit_write          ; exit
+    mov	    rax, SYS_WRITE	    ; write syscall
+	syscall				        ; system call
+    inc     rsi                 ; next position in linebuffer
     jmp     writing_loop
 
 exit_write:
 	;; restore registers (in opposite order)
     pop     r9
-    pop     r8
 	pop	    rdx
 	pop	    rsi
 	pop	    rdi
@@ -116,7 +110,7 @@ exit_write:
 ;;;----------------------------------------------------------------------------
 ;;; subroutine sgrep
 ;;;----------------------------------------------------------------------------
-;;; searches for the given comandline argument in a given line
+;;; searches for the given comandline argument (stored in [rsi]) in a given line
 ;;; r8 contains pointer to begin of string buffer
 ;;; r9 contains pointer to last newline character
 
@@ -214,13 +208,13 @@ write_char:
 
 _start:
 	pop	    rbx                 ; argc (>= 1 guaranteed)
-	pop	    rsi                 ; argv[j]
+	pop	    rsi                 ; programm name
 	dec     rbx
 	jz      exit
 
 read_args:
-    call    read_input          ; store input in the buffer
-	pop	    rsi					; argv[j]
+    pop	    rsi					; argv[j]
+    call    read_input          ; read input into buffer
     call    sgrep
 	dec	    rbx					; dec arg-index
 	jnz	    read_args			; continue until last argument was printed
