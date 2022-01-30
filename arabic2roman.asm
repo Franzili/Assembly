@@ -115,12 +115,13 @@ equal2_4:				; digit equal to 4
 	call write_char
 
 smaller_4:
+	mov r10, r11
+smaller_4_loop:
 	cmp r9, 0
 	jle exit_block		; exit when 0 reached
-	mov r10, r11
 	call write_char
 	dec r9
-	jmp smaller_4
+	jmp smaller_4_loop
 
 exit_block:
 	pop r9
