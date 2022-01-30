@@ -16,11 +16,9 @@
 ;;; start of data section
 section .data
 ;;; a newline character
-newline:
- 	db 0x0a
+newline:			db 0x0a
 ;;; space character
-blank:
-    db 0x20
+blank:				db 0x20
 
 ;;; start of code section
 section	.text

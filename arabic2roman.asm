@@ -16,14 +16,12 @@
 ;;; start of data section
 section .data
 ;;; a newline character
-newline:
- 	db 0x0a
+newline:		db 0x0a
 ;;; space character
-blank:
-    db 0x20
+blank:			db 0x20
 ;;; decimals in ASCII
-ascii0: dw 48
-ascii9: dw 57
+ascii0:			db 48
+ascii9: 		db 57
 ;;; roman numerals
 numeral1: 		db 'I'
 numeral5: 		db 'V'
