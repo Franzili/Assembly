@@ -57,7 +57,7 @@ read_one_char:
     mov	    rax, SYS_READ	; write syscall
 	syscall				    ; system call
     inc     rsi             ; next position in linebuffer
-    cmp     [rsi], newline  ; end of line reached?
+    cmp     byte [rsi], newline  ; end of line reached?
     jne read_one_char       ; no? -> loop until EOF found
 
 exit_read:
