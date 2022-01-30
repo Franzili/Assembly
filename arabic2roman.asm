@@ -198,45 +198,45 @@ write_char:
 ;;; converts a string given in rsi to int/decimal and stores it in r15
 
 stoi:
-	push rsi
-	push rax
-	push r14
-	mov r14, 0
-	mov r15, 0					; r15 will contain the converted number
-	mov rax, 0
+	push 	rsi
+	push 	rax
+	push 	r14
+	mov 	r14, 0
+	mov 	r15, 0					; r15 will contain the converted number
+	mov 	rax, 0
 
 convert_stoi:
-	cmp [rsi], byte 0
-	je exit_stoi				; end of string found
-	cmp byte [rsi], 48			; decimal < 0 ? -> not a number
-	jl not_a_number
-	cmp byte [rsi], 57			; decimal > 9 ? -> not a number
-	jg not_a_number
+	cmp 	[rsi], byte 0
+	je 		exit_stoi				; end of string found
+	cmp 	byte [rsi], 48			; decimal < 0 ? -> not a number
+	jl 		not_a_number
+	cmp 	byte [rsi], 57			; decimal > 9 ? -> not a number
+	jg 		not_a_number
 
 	; digit between 0 and 9
-	mov r15, rax
-	mov rax, 0
-	sub byte [rsi], 48			; convert char to decimal
-	mov al, byte [rsi]			; store digit in lower part of rax
-	add r15, rax				; add result of r15*10 to shift to next pos
-	mov rax, r15
-	mov r14, 10
-	mul r14						; next digit -> mul rax, 10 -> nextD*10 in rax
-	inc rsi						; next position in string
-	jmp convert_stoi
+	mov 	r15, rax
+	mov 	rax, 0
+	sub 	byte [rsi], 48			; convert char to decimal
+	mov 	al, byte [rsi]			; store digit in lower part of rax
+	add 	r15, rax				; add result of r15*10 to shift to next pos
+	mov 	rax, r15
+	mov 	r14, 10
+	mul 	r14						; next digit -> mul rax, 10 -> nextD*10 in rax
+	inc 	rsi						; next position in string
+	jmp 	convert_stoi
 
 not_a_number:
-	mov r15, -1					; result -1 if input not a number
-	pop r14
-	pop rax
-	pop rsi
+	mov 	r15, -1					; result -1 if input not a number
+	pop 	r14
+	pop 	rax
+	pop 	rsi
 	ret
 
 exit_stoi:
 	pop r14
 	pop rax
 	pop rsi
-	ret							; resulting int is stored in r15
+	ret								; resulting int is stored in r15
 
 
 ;;;--------------------------------------------------------------------------
@@ -244,25 +244,25 @@ exit_stoi:
 ;;;--------------------------------------------------------------------------
 
 _start:
-	pop	rbx					; argc (>= 1 guaranteed)
-	pop	rsi					; argv[j] -> programm name
-	dec rbx
-	jz exit
+	pop		rbx					; argc (>= 1 guaranteed)
+	pop		rsi					; argv[j] -> programm name
+	dec 	rbx
+	jz 		exit
 
 read_args:
 	;; print command line arguments
-	pop	rsi					; argv[j]
-	call 	stoi			; convert given string to int and store it in r15
-	call	converting_tree	; start converting
+	pop		rsi					; argv[j]
+	call 	stoi				; convert given string to int and store it in r15
+	call	converting_tree		; start converting
 
-	mov r10, newline		; add a newline in the end
+	mov 	r10, newline		; add a newline in the end
 	call	write_char
 	
-	dec	rbx					; dec arg-index
-	jnz	read_args			; continue until last argument was printed
+	dec		rbx					; dec arg-index
+	jnz		read_args			; continue until last argument was printed
 
 exit:
 	;; exit program via syscall
-	mov	rax, SYS_EXIT		; exit syscall
-	mov	rdi, 0				; exit code 0 (= "ok")
-	syscall 				; kernel interrupt: system call
+	mov		rax, SYS_EXIT		; exit syscall
+	mov		rdi, 0				; exit code 0 (= "ok")
+	syscall 					; system call

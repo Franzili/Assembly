@@ -19,16 +19,16 @@
 ;;; start of data section
 section .data
 ;;; a newline character
-newline:        db 0x0a
+newline:            db 0x0a
 ;;; space character
-blank:          db 0x20
+blank:              db 0x20
 ;;; debugging prints
-debug:			db '*'
-debug2:         db '-'
+debug:			    db '*'
+debug2:             db '-'
 
 section .bss
 ;;; linebuffer of size 128 byte to store 128 ASCII characters
-buffer:         resb 128
+buffer:             resb 128
 ;;; pointer buffer with pointers to begin of lines
 pointers_to_lines:  resb 128
 
