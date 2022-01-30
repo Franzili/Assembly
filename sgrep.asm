@@ -122,6 +122,9 @@ exit_write:
 sgrep:
     push    rsi
     push    r9
+    push    r10
+    push    r11
+    push    r12
     mov     r9, r11             ; will contain pointer to last newline in buffer
     mov     r10, rsi            ; pointer to begin of word to search for
     mov     r11, r8             ; r11 contains current position in string buffer
@@ -167,6 +170,9 @@ not_found:
     jmp exit_sgrep
 
 exit_sgrep:
+    pop     r12
+    pop     r11
+    pop     r10
     pop     r9
     pop     rsi
     ret
