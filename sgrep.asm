@@ -46,10 +46,10 @@ read_input:
 
 read_one_line:
     call    read_line           ; pointer to begin of linebuffer in r8
-    cmp     r9, -1              ; 
+    cmp     r9, -1              ; r9 contains -1 if EOF reached
     je      exit_input
     call    write_buf_content
-    
+    jmp     read_one_line
 
 exit_input:
     pop r9
