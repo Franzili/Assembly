@@ -141,20 +141,20 @@ search_word:
     cmp     r14b, byte 0        ; word not found
     je      not_found
     cmp     r14b, r13b          ; chars match?
-    je     chars_match
+    je      chars_match
     cmp     r14b, byte 0x0a     ; newline found
     je      newline_found
     ; no match
     mov     r10, rsi            ; reset pointer to begin of word to search for
     sub     r11, r12            ; jump back in string buffer
     xor     r12, r12            ; reset number of matched chars
-    jmp search_word
+    jmp     search_word
 
 chars_match:
     inc     r10                 ; next position in word to search for
     inc     r11                 ; next position in string buffer
     inc     r12                 ; increment number of matched chars
-    jmp search_word
+    jmp     search_word
 
 newline_found:
     mov     r9, rsi
@@ -164,13 +164,13 @@ newline_found:
 word_found:
     mov     r10, debug
     call    write_char
-    call write_buf_content      ; write line containing the word
-    jmp exit_sgrep
+    call    write_buf_content      ; write line containing the word
+    jmp     exit_sgrep
 
 not_found:
     mov     r10, debug2
     call    write_char
-    jmp exit_sgrep
+    jmp     exit_sgrep
 
 exit_sgrep:
     pop     r13
@@ -232,3 +232,4 @@ exit:
 	mov	    rax, SYS_EXIT		; exit syscall
 	mov	    rdi, 0				; exit code 0 (= "ok")
 	syscall 				    ; kernel interrupt: system call
+    
