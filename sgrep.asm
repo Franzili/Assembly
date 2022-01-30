@@ -20,14 +20,8 @@ section .data
 newline:        db 0x0a
 ;;; space character
 blank:          db 0x20
-;;; roman numerals
-numeral1: 		db 'I'
-numeral5: 		db 'V'
-numeral10: 		db 'X'
-numeral50: 		db 'L'
-numeral100: 	db 'C'
-numeral500: 	db 'D'
-numeral1000: 	db 'M'
+;;; linebuffer of size (2^31 - 1) to fit into 32-bit int
+buffer:         resb 2147483647
 ;;; debugging prints
 debug:			db '*'
 
@@ -36,6 +30,11 @@ section	.text
 	;; this symbol has to be defined as entry point of the program
 	global _start
 
+
+;;;--------------------------------------------------------------------------
+;;; subroutine read_line
+;;;--------------------------------------------------------------------------
+;;; reads a line from STDIN and stores it in the linebuffer
 
 
 

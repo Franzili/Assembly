@@ -40,30 +40,6 @@ section	.text
 
 
 ;;;----------------------------------------------------------------------------
-;;; subroutine string_len
-;;;----------------------------------------------------------------------------
-;;; stores the length of a string in rsi into r8
-
-string_len:
-	push rsi
-	mov r8, 0
-	cmp [rsi], byte 0		; end of string?
-	je exit_string_len		; return
-
-until_0byte_found:
-	inc rsi					; next position in string
-	inc r8					; increment counter
-	cmp [rsi], byte 0		; end of string?
-	jne until_0byte_found
-
-exit_string_len:
-	mov r10, r8
-	call write_char			; debugging
-	pop rsi
-	ret
-
-
-;;;----------------------------------------------------------------------------
 ;;; subroutine print_digit
 ;;;----------------------------------------------------------------------------
 ;;; prints a value given in r9 in roman numerals
@@ -273,7 +249,6 @@ _start:
 read_args:
 	;; print command line arguments
 	pop	rsi					; argv[j]
-	call	string_len		; get string length and store it in r8
 	call 	stoi			; convert given string to int and store it in r15
 	call	converting_tree	; start converting
 
