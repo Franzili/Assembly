@@ -1,6 +1,6 @@
 ; =============================================================================
 ; 
-; arabic2roman.asm --
+; arabic2roman.asm
 ; takes an arabic number from input and prints it in roman numerals
 ;
 ; Franziska Niemeyer

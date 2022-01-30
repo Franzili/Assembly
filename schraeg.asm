@@ -1,6 +1,6 @@
 ; =============================================================================
 ; 
-; schraeg.asm --
+; schraeg.asm
 ; prints command line arguments at an angle
 ;
 ; Franziska Niemeyer
@@ -68,17 +68,20 @@ write_string:
     mov 	rcx, 0  		; position in string
     push    rcx
     push    r9  			; inner loop variable
+
 writing_loop:
     cmp 	[rsi], byte 0
     je 		eos_found
     mov 	r8, blank
     mov 	r9, 0   			; inner loop variable
+
 blank_loop:
     cmp 	r9, rcx
     jge 	write_one_char
     call 	write_char
     inc 	r9
     jmp 	blank_loop
+
 write_one_char:
     mov 	r8, rsi
     call 	write_char
@@ -88,6 +91,7 @@ write_one_char:
 	inc		rdx				; count
 	inc		rsi				; next position in string
     jmp 	writing_loop
+
 eos_found:
 	;; here rdx contains the string length
     pop 	r9
@@ -107,14 +111,15 @@ _start:
 	pop		rsi					; argv[j]
 	dec 	rbx
 	jz 		exit
+
 read_args:
-	;; print command line arguments
 	pop		rsi					; argv[j]
 	call	write_string		; string in rsi is written to stdout
 	dec		rbx					; dec arg-index
 	jnz		read_args			; continue until last argument was printed
+
 exit:
-	;; exit program via syscall exit (necessary!)
+	;; exit program via syscall
 	mov		rax, SYS_EXIT		; exit syscall
 	mov		rdi, 0				; exit code 0 (= "ok")
-	syscall 					; kernel interrupt: system call
+	syscall 					; system call

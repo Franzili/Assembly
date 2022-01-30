@@ -1,6 +1,6 @@
 ; =============================================================================
 ; 
-; sgrep.asm --
+; sgrep.asm
 ; Similar functionality as Unix 'grep'
 ;
 ; Franziska Niemeyer
