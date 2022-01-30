@@ -74,7 +74,7 @@ eof_reached:
 ;;;----------------------------------------------------------------------------
 ;;; subroutine write_buf_content
 ;;;----------------------------------------------------------------------------
-;;; writes the linebuffer content (pointer to start in r8) to STOUT
+;;; writes the linebuffer content, from r9 to next newline char, to STOUT
 
 write_buf_content:
     ;; save registers that are used in the code
@@ -84,15 +84,17 @@ write_buf_content:
 	push	rdx
     push    r8
     push    r9
-    mov     r9, newline
-    mov     rsi, r8         ; set rsi to begin of linebuffer
+    inc     r9              ; next char after newline
+    mov     rsi, r9         ; set rsi to begin of line
     ;; prepare arguments for write syscall
 	mov	    rdi, STDOUT		; file descriptor = 1 (stdout)
 	mov	    rdx, 1			; length
 
 writing_loop:
-    mov     r10, [rsi]
-    cmp     [rsi], byte 0   ; end reached?
+    mov     r8b, [rsi]
+    cmp     r8b, byte 0     ; end reached?
+    je      exit_write      ; exit
+    cmp     r8b, byte 0x0a  ; next newline reached?
     je      exit_write      ; exit
     mov	    rax, SYS_WRITE	; write syscall
 	syscall				    ; system call
@@ -115,6 +117,7 @@ exit_write:
 ;;;----------------------------------------------------------------------------
 ;;; searches for the given comandline argument in a given line
 ;;; r8 contains pointer to begin of string buffer
+;;; r9 contains pointer to last newline character
 
 sgrep:
     push    rsi
@@ -149,6 +152,8 @@ chars_match:
 
 newline_found:
     mov     r9, rsi
+    inc     r11
+    jmp     search_word
 
 word_found:
     mov     r10, debug
