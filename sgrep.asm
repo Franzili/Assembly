@@ -36,6 +36,27 @@ global _start
 
 
 ;;;--------------------------------------------------------------------------
+;;; subroutine read_input
+;;;--------------------------------------------------------------------------
+;;; reads STDIN until EOF reached and stores it in the linebuffer
+;;; store pointer to begin of linebuffer in r8
+
+read_input:
+    push r9
+
+read_one_line:
+    call    read_line           ; pointer to begin of linebuffer in r8
+    cmp     r9, -1              ; 
+    je      exit_input
+    call    write_buf_content
+    
+
+exit_input:
+    pop r9
+    ret
+
+
+;;;--------------------------------------------------------------------------
 ;;; subroutine read_line
 ;;;--------------------------------------------------------------------------
 ;;; reads a line from STDIN and stores it in the linebuffer
@@ -47,6 +68,7 @@ read_line:
 	push	rdi
 	push	rsi
 	push	rdx
+    xor     r9, r9          ; r9 will contain -1 if EOF reached
     mov     r8, buffer      ; reminder pointer to begin of line buffer
     mov     rsi, buffer     ; initialize rsi as pointer to linebuffer
     ;; prepare arguments for write syscall
@@ -58,8 +80,18 @@ read_one_char:
 	syscall				    ; system call
     inc     rsi             ; next position in linebuffer
     mov     r9, newline
+    cmp     rax, 0          ; end of file reached?
+    je      eof_reached     ; yes? -> set r9 to -1
     cmp     [rsi], r9       ; end of line reached?
-    jne     read_one_char   ; no? -> loop until EOF found
+    jne     read_one_char   ; no? -> loop until newline found
+
+eof_reached:
+    mov     r9, -1
+    pop	    rdx
+	pop	    rsi
+	pop	    rdi
+	pop	    rax+
+    ret
 
 exit_read:
     ;; restore registers (in opposite order)
@@ -143,8 +175,7 @@ _start:
 read_args:
 	;; print command line arguments
 	pop	    rsi					; argv[j]
-    call    read_line
-    call    write_buf_content
+    call    read_input
 	dec	    rbx					; dec arg-index
 	jnz	    read_args			; continue until last argument was printed
 
