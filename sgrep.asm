@@ -102,6 +102,8 @@ read_args:
 	;; print command line arguments
 	pop	rsi					; argv[j]
     call read_line
+    mov r10, buffer
+    call write_char
 	dec	rbx					; dec arg-index
 	jnz	read_args			; continue until last argument was printed
 
