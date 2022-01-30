@@ -58,7 +58,7 @@ read_one_char:
 	syscall				    ; system call
     inc     rsi             ; next position in linebuffer
     cmp     [rsi], newline  ; end of line reached?
-    jne read_one_char       ; no? -> loop until EOF found
+    jne     read_one_char   ; no? -> loop until EOF found
 
 exit_read:
     ;; restore registers (in opposite order)
@@ -92,7 +92,7 @@ writing_loop:
     mov	    rax, SYS_WRITE	; write syscall
 	syscall				    ; system call
     inc     rsi             ; next position in linebuffer
-    jmp writing_loop
+    jmp     writing_loop
 
 exit_write:
 	;; restore registers (in opposite order)
@@ -134,24 +134,24 @@ write_char:
 ;;;--------------------------------------------------------------------------
 
 _start:
-	pop	rbx					; argc (>= 1 guaranteed)
-	pop	rsi					; argv[j]
+	pop	rbx					    ; argc (>= 1 guaranteed)
+	pop	rsi					    ; argv[j]
 	dec rbx
 	jz exit
 
 read_args:
 	;; print command line arguments
-	pop	rsi					; argv[j]
-    call read_line
-    call write_buf_content
-	dec	rbx					; dec arg-index
-	jnz	read_args			; continue until last argument was printed
+	pop	    rsi					; argv[j]
+    call    read_line
+    call    write_buf_content
+	dec	    rbx					; dec arg-index
+	jnz	    read_args			; continue until last argument was printed
 
-	mov r10, newline		; add a newline in the end
+	mov     r10, newline		; add a newline in the end
 	call	write_char
 
 exit:
 	;; exit program via syscall
-	mov	rax, SYS_EXIT		; exit syscall
-	mov	rdi, 0				; exit code 0 (= "ok")
-	syscall 				; kernel interrupt: system call
+	mov	    rax, SYS_EXIT		; exit syscall
+	mov	    rdi, 0				; exit code 0 (= "ok")
+	syscall 				    ; kernel interrupt: system call
