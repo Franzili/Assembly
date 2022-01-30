@@ -14,6 +14,7 @@
 ;;; file ids
 %define STDOUT		1
 %define STDIN       0
+%define EOF         -1
 
 ;;; start of data section
 section .data
@@ -46,7 +47,6 @@ read_line:
 	push	rdi
 	push	rsi
 	push	rdx
-    push    r8
     push    r9
     xor     r9, r9          ; mov r9, 0 -> pointer offset to buffer
     mov     r8, buffer      ; reminder pointer to begin of line buffer
@@ -59,13 +59,13 @@ read_one_char:
     add     rsi, r9         ; set pointer to next posiotion in linebuffer
 	mov	    rdx, 1			; length -> one character
 	syscall				    ; system call
+    inc     r9
     cmp     eax, 0          ; end of file reached?
     jne read_one_char
 
 exit_read:
     ;; restore registers (in opposite order)
     pop     r9
-    pop     r8
     pop	    rdx
 	pop	    rsi
 	pop	    rdi
@@ -85,16 +85,55 @@ write_char:
 	push	rsi
 	push	rdx
 	;; prepare arguments for write syscall
-	mov	rax, SYS_WRITE	; write syscall
-	mov	rdi, STDOUT		; file descriptor = 1 (stdout)
-	mov	rsi, r10		; character to write
-	mov	rdx, 1			; length
-	syscall				; system call
+	mov	    rax, SYS_WRITE	; write syscall
+	mov	    rdi, STDOUT		; file descriptor = 1 (stdout)
+	mov	    rsi, r10		; character to write
+	mov	    rdx, 1			; length
+	syscall				    ; system call
 	;; restore registers (in opposite order)
-	pop	rdx
-	pop	rsi
-	pop	rdi
-	pop	rax
+	pop	    rdx
+	pop	    rsi
+	pop	    rdi
+	pop	    rax
+	ret
+
+
+;;;----------------------------------------------------------------------------
+;;; subroutine write_buf_content
+;;;----------------------------------------------------------------------------
+;;; writes the linebuffer content (pointer to start in r8) to STOUT
+
+write_buf_content:
+    ;; save registers that are used in the code
+    push	rax
+	push	rdi
+	push	rsi
+	push	rdx
+    push    r8
+    push    r9
+    xor     r9, r9          ; mov r9, 0
+    mov     rsi, r8         ; set rsi to begin of linebuffer
+
+write_char:
+    cmp     rsi, EOF        ; end of file reached?
+    je      exit_write      ; exit
+	;; prepare arguments for write syscall
+	mov	    rax, SYS_WRITE	; write syscall
+	mov	    rdi, STDOUT		; file descriptor = 1 (stdout)
+	add	    rsi, r9		    ; character to write
+	mov	    rdx, 1			; length
+	syscall				    ; system call
+    inc     r9              ; next position in linebuffer
+    jmp write_char
+
+exit_write:
+	;; restore registers (in opposite order)
+    pop     r9
+    pop     r8
+	pop	    rdx
+	pop	    rsi
+	pop	    rdi
+	pop	    rax
 	ret
 
 
