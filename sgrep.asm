@@ -28,6 +28,8 @@ debug:			db '*'
 section .bss
 ;;; linebuffer of size 128 byte to store 128 ASCII characters
 buffer:         resb 128
+;;; pointer buffer with pointers to begin of lines
+pointers_to_lines:  resb 128
 
 ;;; start of code section
 section	.text
@@ -38,47 +40,22 @@ global _start
 ;;;--------------------------------------------------------------------------
 ;;; subroutine read_input
 ;;;--------------------------------------------------------------------------
-;;; reads STDIN until EOF reached and stores it in the linebuffer
+;;; reads input from STDIN and stores it in the linebuffer
 ;;; store pointer to begin of linebuffer in r8
 
 read_input:
-    push r9
-
-read_one_line:
-    call    read_line           ; pointer to begin of linebuffer in r8
-    cmp     r9, -1              ; r9 contains -1 if EOF reached
-    je      exit_input
-    call    write_buf_content
-    jmp     read_one_line
-
-exit_input:
-    pop r9
-    ret
-
-
-;;;--------------------------------------------------------------------------
-;;; subroutine read_line
-;;;--------------------------------------------------------------------------
-;;; reads a line from STDIN and stores it in the linebuffer
-;;; store pointer to begin of linebuffer in r8
-
-read_line:
     ;; save registers that are used in the code
 	push	rax
 	push	rdi
 	push	rsi
 	push	rdx
-    xor     r9, r9          ; r9 will contain -1 if EOF reached
-    mov     r9, newline     ; r9 is also used to compare with newline
-    mov     r8, buffer      ; reminder pointer to begin of line buffer
+    mov     r8, buffer      ; reminder pointer to begin of string buffer
     mov     rsi, buffer     ; initialize rsi as pointer to linebuffer
     ;; prepare arguments for write syscall
 	mov	    rdi, STDIN		; file descriptor = 0 (stdin)
 	mov	    rdx, 1			; length -> one character
 
 read_one_char:
-    cmp     [rsi], r9       ; end of line reached?
-    je      exit_read       ; yes? -> exit
     mov	    rax, SYS_READ	; write syscall
 	syscall				    ; system call
     inc     rsi             ; next position in linebuffer
@@ -86,15 +63,6 @@ read_one_char:
     jne     read_one_char   ; no? -> loop
 
 eof_reached:
-    mov     r9, -1          ; signal for EOF reached
-    pop	    rdx
-	pop	    rsi
-	pop	    rdi
-	pop	    rax
-    ret
-
-exit_read:
-    ;; restore registers (in opposite order)
     pop	    rdx
 	pop	    rsi
 	pop	    rdi
@@ -115,13 +83,13 @@ write_buf_content:
 	push	rdx
     push    r8
     push    r9
+    mov     r9, newline
     mov     rsi, r8         ; set rsi to begin of linebuffer
     ;; prepare arguments for write syscall
 	mov	    rdi, STDOUT		; file descriptor = 1 (stdout)
 	mov	    rdx, 1			; length
 
 writing_loop:
-    mov     r9, newline
     cmp     [rsi], r9       ; end of line reached?
     je      exit_write      ; exit
     mov	    rax, SYS_WRITE	; write syscall
