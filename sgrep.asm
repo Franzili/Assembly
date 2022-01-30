@@ -211,7 +211,6 @@ read_args:
     call    read_input          ; store input in the buffer
 	pop	    rsi					; argv[j]
     call    sgrep
-    call    write_buf_content
 	dec	    rbx					; dec arg-index
 	jnz	    read_args			; continue until last argument was printed
 
