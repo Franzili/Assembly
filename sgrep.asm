@@ -63,6 +63,30 @@ read_one_char:
 	ret
 
 
+;;;----------------------------------------------------------------------------
+;;; subroutine write_char
+;;;----------------------------------------------------------------------------
+;;; writes a single character stored in r10 to stdout
+
+write_char:
+	;; save registers that are used in the code
+	push	rax
+	push	rdi
+	push	rsi
+	push	rdx
+	;; prepare arguments for write syscall
+	mov	rax, SYS_WRITE	; write syscall
+	mov	rdi, STDOUT		; file descriptor = 1 (stdout)
+	mov	rsi, r10		; character to write
+	mov	rdx, 1			; length
+	syscall				; system call
+	;; restore registers (in opposite order)
+	pop	rdx
+	pop	rsi
+	pop	rdi
+	pop	rax
+	ret
+
 
 ;;;--------------------------------------------------------------------------
 ;;; main entry
