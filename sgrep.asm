@@ -147,6 +147,7 @@ read_args:
 	;; print command line arguments
 	pop	    rsi					; argv[j]
     call    read_input
+    call    write_buf_content
 	dec	    rbx					; dec arg-index
 	jnz	    read_args			; continue until last argument was printed
 
