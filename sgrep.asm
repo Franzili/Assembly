@@ -114,7 +114,7 @@ write_buf_content:
     xor     r9, r9          ; mov r9, 0
     mov     rsi, r8         ; set rsi to begin of linebuffer
 
-write_char:
+writing_loop:
     cmp     rsi, EOF        ; end of file reached?
     je      exit_write      ; exit
 	;; prepare arguments for write syscall
@@ -124,7 +124,7 @@ write_char:
 	mov	    rdx, 1			; length
 	syscall				    ; system call
     inc     r9              ; next position in linebuffer
-    jmp write_char
+    jmp writing_loop
 
 exit_write:
 	;; restore registers (in opposite order)
