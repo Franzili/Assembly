@@ -50,14 +50,14 @@ read_line:
     mov     r8, buffer      ; reminder pointer to begin of line buffer
     mov     rsi, buffer     ; initialize rsi as pointer to linebuffer
     ;; prepare arguments for write syscall
-	mov	    rax, SYS_READ	; write syscall
 	mov	    rdi, STDIN		; file descriptor = 0 (stdin)
 	mov	    rdx, 1			; length -> one character
 
 read_one_char:
+    mov	    rax, SYS_READ	; write syscall
 	syscall				    ; system call
     inc     rsi             ; next position in linebuffer
-    cmp     eax, 0          ; end of file reached?
+    cmp     rax, 0          ; end of file reached?
     jne read_one_char
 
 exit_read:
@@ -83,13 +83,13 @@ write_buf_content:
     push    r8
     mov     rsi, r8         ; set rsi to begin of linebuffer
     ;; prepare arguments for write syscall
-	mov	    rax, SYS_WRITE	; write syscall
 	mov	    rdi, STDOUT		; file descriptor = 1 (stdout)
 	mov	    rdx, 1			; length
 
 writing_loop:
     cmp     rsi, EOF        ; end of file reached?
     je      exit_write      ; exit
+    mov	    rax, SYS_WRITE	; write syscall
 	syscall				    ; system call
     inc     rsi             ; next position in linebuffer
     jmp writing_loop
