@@ -21,8 +21,8 @@ section .data
 newline:        db 0x0a
 ;;; space character
 blank:          db 0x20
-;;; linebuffer of size (2^31 - 1) to fit into 32-bit int
-buffer:         resb 2147483647
+;;; linebuffer of size 128 byte to store 128 ASCII characters
+buffer:         resb 128
 ;;; debugging prints
 debug:			db '*'
 
@@ -36,8 +36,10 @@ section	.text
 ;;; subroutine read_line
 ;;;--------------------------------------------------------------------------
 ;;; reads a line from STDIN and stores it in the linebuffer
+;;; store pointer to begin of linebuffer in r8
 
 read_line:
+    mov r8, buffer      ; pointer to begin of line buffer
 
 read_one_char:
 	;; save registers that are used in the code
@@ -48,8 +50,8 @@ read_one_char:
 	;; prepare arguments for write syscall
 	mov	rax, SYS_READ	; write syscall
 	mov	rdi, STDIN		; file descriptor = 0 (stdin)
-	mov	rsi, r10		; character to write
-	mov	rdx, 1			; length
+	mov	rsi, buffer		; set pointer to next position in linebuffer
+	mov	rdx, 1			; length -> one character
 	syscall				; system call
 	;; restore registers (in opposite order)
 	pop	rdx
@@ -73,9 +75,7 @@ _start:
 read_args:
 	;; print command line arguments
 	pop	rsi					; argv[j]
-	call	string_len		; get string length and store it in r8
-	call 	stoi			; convert given string to int and store it in r15
-	call	converting_tree	; start converting
+    call read_line
 	dec	rbx					; dec arg-index
 	jnz	read_args			; continue until last argument was printed
 
