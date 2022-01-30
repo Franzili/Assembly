@@ -127,6 +127,7 @@ sgrep:
     push    r11
     push    r12
     push    r13
+    ; prepare registers
     mov     r9, r11             ; will contain pointer to last newline in buffer
     mov     r10, rsi            ; pointer to begin of word to search for
     mov     r11, r8             ; r11 contains current position in string buffer
