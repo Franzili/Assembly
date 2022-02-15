@@ -26,8 +26,8 @@ debug2:             db '-'
 ;;; messages
 welcome:            db "input a text to search in", 0x0a
 welcome_len:        equ $-welcome
-not_found:          db "string not found", 0x0a
-not_found_len:      equ $-not_found
+word_not_found:     db "string not found", 0x0a
+word_not_found_len: equ $-not_found
 found:              db "string was found in the following line", 0x0a
 found_len:          equ $-found
 
@@ -177,8 +177,8 @@ word_found:
     jmp     exit_sgrep
 
 not_found:
-    mov     r10, not_found
-    mov     r15, not_found_len  ; length of string to write   
+    mov     r10, word_not_found
+    mov     r15, word_not_found_len
     call    write_stdout
     jmp     exit_sgrep
 
