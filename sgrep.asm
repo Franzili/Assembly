@@ -88,9 +88,6 @@ write_buf_content:
 ;    inc     r9              ; next char after newline
     mov     rsi, r9         ; set rsi to begin of line
     xor     r8, r8          ; set to 0
-    ;; prepare arguments for write syscall
-	mov	    rdi, STDOUT		; file descriptor = 1 (stdout)
-	mov	    rdx, 1			; length
 
 writing_loop:
     mov     r14, [rsi]
@@ -99,8 +96,12 @@ writing_loop:
     je      exit_write      ; exit
     cmp     r8b, byte 0x0a  ; next newline reached?
     je      exit_write      ; exit
+    ;; prepare arguments for write syscall
     mov	    rax, SYS_WRITE	; write syscall
+	mov	    rdi, STDOUT		; file descriptor = 1 (stdout)
+	mov	    rdx, 1			; length
 	syscall				    ; system call
+    
     inc     rsi             ; next position in linebuffer
     jmp     writing_loop
 
