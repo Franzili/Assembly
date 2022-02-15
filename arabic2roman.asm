@@ -30,7 +30,7 @@ numeral50: 		db 'L'
 numeral100: 	db 'C'
 numeral500: 	db 'D'
 numeral1000: 	db 'M'
-;;; debugging prints
+;;; error messages
 NaN_input:		db 0x0a, '>> Input is not a number!', 0x0a
 NaN_msglen:		equ $-NaN_input
 
@@ -117,7 +117,7 @@ exit_block:
 ;;; subroutines, value to print given in r15
 ;;; r11 contains the char for one, r12 char for five, r13 char for ten
 
-converting_tree:			; input not in number range 0..9999
+converting_tree:				; input not in number range 0..9999
 	push 	r14
 
 thousands:
@@ -255,26 +255,26 @@ exit_stoi:
 ;;;--------------------------------------------------------------------------
 
 _start:
-	pop		rbx					; argc (>= 1 guaranteed)
-	pop		rsi					; argv[j] -> programm name
+	pop		rbx						; argc (>= 1 guaranteed)
+	pop		rsi						; argv[j] -> programm name
 	dec 	rbx
 	jz 		exit
 
 read_args:
 	;; print command line arguments
-	pop		rsi					; argv[j]
-	call 	stoi				; convert given string to int and store it in r15
-	cmp		r15, -1				; input not a number
+	pop		rsi						; argv[j]
+	call 	stoi					; convert given string to int and store it in r15
+	cmp		r15, -1					; input not a number
 	je		input_NaN
-	call	converting_tree		; start converting
+	call	converting_tree			; start converting
 
-	mov 	r10, newline		; add a newline in the end
-	mov		r8, 1				; length of string to write (single char)
+	mov 	r10, newline			; add a newline in the end
+	mov		r8, 1					; length of string to write (single char)
 	call	write_stdout
 	
-	dec		rbx					; dec arg-index
-	jnz		read_args			; continue until last argument was printed
-	jmp 	exit				; exit program with exit code 0
+	dec		rbx						; dec arg-index
+	jnz		read_args				; continue until last argument was printed
+	jmp 	exit					; exit program with exit code 0
 
 input_NaN:
 	;; print error message
@@ -284,6 +284,6 @@ input_NaN:
 
 exit:
 	;; exit program via syscall
-	mov		rax, SYS_EXIT		; exit syscall
-	mov		rdi, 0				; exit code 0 (= "ok")
-	syscall 					; system call
+	mov		rax, SYS_EXIT			; exit syscall
+	mov		rdi, 0					; exit code 0 (= "ok")
+	syscall 						; system call
