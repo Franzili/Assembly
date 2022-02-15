@@ -90,8 +90,7 @@ write_buf_content:
     xor     r8, r8          ; set to 0
 
 writing_loop:
-    mov     r14, [rsi]
-    mov     r8b, r14b
+    mov     r8b, byte [rsi]
     cmp     r8b, byte 0     ; end reached?
     je      exit_write      ; exit
     cmp     r8b, byte 0x0a  ; next newline reached?
@@ -101,7 +100,7 @@ writing_loop:
 	mov	    rdi, STDOUT		; file descriptor = 1 (stdout)
 	mov	    rdx, 1			; length
 	syscall				    ; system call
-    
+
     inc     rsi             ; next position in linebuffer
     jmp     writing_loop
 
@@ -125,7 +124,6 @@ exit_write:
 
 sgrep:
     push    rsi                 ; contains pointer to begin of word to search for
-    push    r9                  ; will contain pointer to last newline in buffer
     push    r10                 ; will contain char to compare from searched word
     push    r11                 ; will contain current position in string buffer
     push    r12                 ; will contain the number of matched chars
@@ -182,7 +180,6 @@ exit_sgrep:
     pop     r12
     pop     r11
     pop     r10
-    pop     r9
     pop     rsi
     ret
 
