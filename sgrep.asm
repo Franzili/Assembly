@@ -25,7 +25,11 @@ debug:			    db '*'
 debug2:             db '-'
 ;;; messages
 welcome:            db "input a text to search in", 0x0a
-welcome_len:        equ $-welcome       ; message length
+welcome_len:        equ $-welcome
+not_found:          db "string not found", 0x0a
+not_found_len:      equ $-not_found
+found:              db "string was found in the following line", 0x0a
+found_len:          equ $-found
 
 section .bss
 ;;; linebuffer of size 128 byte to store 128 ASCII characters
@@ -166,15 +170,15 @@ newline_found:
     jmp     search_word
 
 word_found:
-    mov     r10, debug
-    mov     r15, 1              ; length of string to write (single char)
+    mov     r10, found
+    mov     r15, found_len      ; length of string to write
     call    write_stdout
     call    write_buf_content   ; write line containing the word
     jmp     exit_sgrep
 
 not_found:
-    mov     r10, debug2
-    mov     r15, 1              ; length of string to write (single char)    
+    mov     r10, not_found
+    mov     r15, not_found_len  ; length of string to write   
     call    write_stdout
     jmp     exit_sgrep
 
