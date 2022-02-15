@@ -94,7 +94,7 @@ write_buf_content:
 
 writing_loop:
     mov     r14, [rsi]
-    mov     r8b, byte r14
+    mov     r8b, r14b
     cmp     r8b, byte 0     ; end reached?
     je      exit_write      ; exit
     cmp     r8b, byte 0x0a  ; next newline reached?
