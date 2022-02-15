@@ -23,6 +23,9 @@ newline:            db 0x0a
 ;;; debugging prints
 debug:			    db '*'
 debug2:             db '-'
+;;; messages
+welcome:            db "input a text to search in", 0x0a
+welcome_len:        equ $-welcome       ; message length
 
 section .bss
 ;;; linebuffer of size 128 byte to store 128 ASCII characters
@@ -162,13 +165,15 @@ newline_found:
 
 word_found:
     mov     r10, debug
-    call    write_char
+    mov     r15, 1              ; length of string to write (single char)
+    call    write_stdout
     call    write_buf_content   ; write line containing the word
     jmp     exit_sgrep
 
 not_found:
     mov     r10, debug2
-    call    write_char
+    mov     r15, 1              ; length of string to write (single char)    
+    call    write_stdout
     jmp     exit_sgrep
 
 exit_sgrep:
@@ -182,11 +187,11 @@ exit_sgrep:
 
 
 ;;;----------------------------------------------------------------------------
-;;; subroutine write_char
+;;; subroutine write_stdout
 ;;;----------------------------------------------------------------------------
-;;; writes a single character stored in r10 to stdout
+;;; writes a string stored in r10 to stdout, length given in r15
 
-write_char:
+write_stdout:
 	;; save registers that are used in the code
 	push	rax
 	push	rdi
@@ -196,7 +201,7 @@ write_char:
 	mov	    rax, SYS_WRITE	; write syscall
 	mov	    rdi, STDOUT		; file descriptor = 1 (stdout)
 	mov	    rsi, r10		; character to write
-	mov	    rdx, 1			; length
+	mov	    rdx, r15		; length
 	syscall				    ; system call
 	;; restore registers (in opposite order)
 	pop	    rdx
@@ -224,7 +229,8 @@ read_args:
 	jnz	    read_args			; continue until last argument was printed
 
 	mov     r10, newline		; add a newline in the end
-	call	write_char
+    mov     r15, 1              ; length of string to write (single char)
+	call	write_stdout
 
 exit:
 	;; exit program via syscall
