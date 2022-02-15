@@ -20,9 +20,6 @@
 section .data
 ;;; a newline character
 newline:            db 0x0a
-;;; debugging prints
-debug:			    db '*'
-debug2:             db '-'
 ;;; messages
 welcome:            db 0x0a, ">> Input a text to search in:", 0x0a
 welcome_len:        equ $-welcome
