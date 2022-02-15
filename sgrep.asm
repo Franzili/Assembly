@@ -223,9 +223,9 @@ _start:
 
 read_args:
     pop	    rsi					; argv[j]
-    call    read_input          ; read input into buffer
     mov     r10, welcome
     mov     r15, welcome_len    ; length of string to write
+    call    read_input          ; read input into buffer
     call    sgrep
 	dec	    rbx					; dec arg-index
 	jnz	    read_args			; continue until last argument was printed
