@@ -31,7 +31,8 @@ numeral100: 	db 'C'
 numeral500: 	db 'D'
 numeral1000: 	db 'M'
 ;;; debugging prints
-debug:			db '*'
+NaN_input:		db 0x0a, '>> Input is not a number!', 0x0a
+NaN_msglen:		equ $-NaN_input
 
 ;;; start of code section
 section	.text
@@ -46,7 +47,10 @@ global _start
 ;;; r11 contains char for one, r12 char for five, r13 char for ten
 
 print_digit:
+	push	r8
 	push 	r9
+	push	r15
+	mov		r8, 1			; length of chars to write always one, except error
 	cmp 	r9, 9			; digit is a nine
 	je 		nine
 	cmp 	r9, 4			; digit is between 5 and 8
@@ -56,26 +60,28 @@ print_digit:
 	cmp 	r9, 4
 	jl 		smaller_4
 	; NaN
-	mov 	r10, debug
-	call 	write_char
+	mov 	r10, NaN_input
+	mov		r8, NaN_msglen
+	call 	write_stdout
+	ret
 
 nine:
 	mov 	r10, r11
-	call 	write_char
+	call 	write_stdout
 	mov 	r10, r13
-	call 	write_char
+	call 	write_stdout
 	jmp 	exit_block
 
 ; digit between 5 and 8
 greater4:
 	mov 	r10, r12
-	call 	write_char
+	call 	write_stdout
 	cmp 	r9, 5
 	je 		exit_block
 ; digit between 6 and 8
 greater4_loop:
 	mov 	r10, r11
-	call 	write_char
+	call 	write_stdout
 	dec 	r9
 	cmp 	r9, 6
 	jge 	greater4_loop
@@ -84,21 +90,23 @@ greater4_loop:
 ; digit equal to 4
 equal2_4:
 	mov 	r10, r11
-	call 	write_char
+	call 	write_stdout
 	mov 	r10, r12
-	call 	write_char
+	call 	write_stdout
 
 smaller_4:
 	mov 	r10, r11
 smaller_4_loop:
 	cmp 	r9, 0
 	jle 	exit_block		; exit when 0 reached
-	call 	write_char
+	call 	write_stdout
 	dec 	r9
 	jmp 	smaller_4_loop
 
 exit_block:
-	pop r9
+	pop		r15
+	pop 	r9
+	pop		r8
 	ret
 
 
@@ -123,7 +131,8 @@ thousands:
 	mov 	r9, rax				; store digit to print into r9
 	mov 	r10, numeral1000
 thousands_loop:
-	call 	write_char
+	mov		r8, 1
+	call 	write_stdout
 	dec 	r9
 	jnz 	thousands_loop
 
@@ -168,27 +177,29 @@ exit_tree:
 
 
 ;;;----------------------------------------------------------------------------
-;;; subroutine write_char
+;;; subroutine write_stdout
 ;;;----------------------------------------------------------------------------
-;;; writes a single character stored in r10 to stdout
+;;; writes a string stored in r10 to stdout, length given in r8
 
-write_char:
+write_stdout:
 	;; save registers that are used in the code
 	push	rax
 	push	rdi
 	push	rsi
 	push	rdx
+    push    r15
 	;; prepare arguments for write syscall
-	mov		rax, SYS_WRITE	; write syscall
-	mov		rdi, STDOUT		; file descriptor = 1 (stdout)
-	mov		rsi, r10		; character to write
-	mov		rdx, 1			; length
-	syscall					; system call
+	mov	    rax, SYS_WRITE	; write syscall
+	mov	    rdi, STDOUT		; file descriptor = 1 (stdout)
+	mov	    rsi, r10		; character to write
+	mov	    rdx, r8			; length
+	syscall				    ; system call
 	;; restore registers (in opposite order)
-	pop		rdx
-	pop		rsi
-	pop		rdi
-	pop		rax
+    pop     r15
+	pop	    rdx
+	pop	    rsi
+	pop	    rdi
+	pop	    rax
 	ret
 
 
@@ -253,13 +264,22 @@ read_args:
 	;; print command line arguments
 	pop		rsi					; argv[j]
 	call 	stoi				; convert given string to int and store it in r15
+	cmp		r15, -1				; input not a number
+	je		input_NaN
 	call	converting_tree		; start converting
 
 	mov 	r10, newline		; add a newline in the end
-	call	write_char
+	mov		r8, 1				; length of string to write (single char)
+	call	write_stdout
 	
 	dec		rbx					; dec arg-index
 	jnz		read_args			; continue until last argument was printed
+
+input_NaN:
+	;; print error message
+	mov		r10, NaN_input
+	mov		r8, NaN_msglen
+	call 	write_stdout
 
 exit:
 	;; exit program via syscall
