@@ -164,7 +164,7 @@ chars_match:
     jmp     search_word
 
 newline_found:
-    mov     r9, rsi
+    mov     r9, r11
     inc     r11
     jmp     search_word
 
