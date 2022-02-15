@@ -150,7 +150,8 @@ search_word:
     ; no match
     mov     r10, rsi            ; reset pointer to begin of word to search for
     sub     r11, r12            ; jump back in string buffer
-    xor     r12, r12            ; reset number of matched chars
+    inc     r11
+    xor     r12, r12            ; reset number of matched chars to 0
     jmp     search_word
 
 chars_match:
