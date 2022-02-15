@@ -122,18 +122,17 @@ exit_write:
 ;;; r9 contains pointer to last newline character
 
 sgrep:
-    push    rsi
-    push    r9
-    push    r10
-    push    r11
-    push    r12
+    push    rsi                 ; contains pointer to begin of word to search for
+    push    r9                  ; will contain pointer to last newline in buffer
+    push    r10                 ; will contain char to compare from searched word
+    push    r11                 ; will contain current position in string buffer
+    push    r12                 ; will contain the number of matched chars
     push    r13
     ; prepare registers
-    mov     r9, r11             ; will contain pointer to last newline in buffer
     mov     r10, rsi            ; pointer to begin of word to search for
-    mov     r11, r8             ; r11 contains current position in string buffer
-    xor     r12, r12            ; contains the number of matched chars
-    xor     r13, r13
+    mov     r11, r8             ; r8 contains current position in string buffer
+    xor     r12, r12            ; set to 0
+    xor     r13, r13            ; set to 0
 
 search_word:
     mov     r13b, [r10]         ; next char in word to search for
