@@ -28,7 +28,7 @@ welcome:            db 0x0a, "input a text to search in", 0x0a
 welcome_len:        equ $-welcome
 word_not_found:     db 0x0a, ">> string not found", 0x0a
 word_not_found_len: equ $-word_not_found
-found:              db 0x0a, ">> string was found in the following line\:", 0x0a
+found:              db 0x0a, ">> string was found in the following line:", 0x0a
 found_len:          equ $-found
 
 section .bss
