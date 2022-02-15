@@ -128,11 +128,11 @@ sgrep:
     push    r10                 ; will contain char to compare from searched word
     push    r11                 ; will contain current position in string buffer
     push    r12                 ; will contain the number of matched chars
-    push    r13
+    push    r13                 ; will contain next char in word to search for
     ; prepare registers
     mov     r10, rsi            ; pointer to begin of word to search for
     mov     r11, r8             ; r8 contains current position in string buffer
-    mov     r9, r8
+    mov     r9, r8              ; if word is in first line, pointer to begin
     xor     r12, r12            ; set to 0
     xor     r13, r13            ; set to 0
 
