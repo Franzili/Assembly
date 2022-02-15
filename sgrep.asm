@@ -123,8 +123,8 @@ exit_write:
 ;;;----------------------------------------------------------------------------
 ;;; searches for the given comandline argument (stored in [rsi]) in a given line
 ;;; r8 contains pointer to begin of string buffer
-;;; r9 contains pointer to last newline character or begin of string buffer, if
-;;; word was found in first line
+;;; r9 contains pointer to the char after the last newline character or to the
+;;; begin of the string buffer, if word was found in first line
 
 sgrep:
     push    rsi                 ; contains pointer to begin of word to search for
@@ -164,8 +164,8 @@ chars_match:
     jmp     search_word
 
 newline_found:
-    mov     r9, r11
     inc     r11
+    mov     r9, r11
     jmp     search_word
 
 word_found:
