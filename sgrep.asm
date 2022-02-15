@@ -120,7 +120,8 @@ exit_write:
 ;;;----------------------------------------------------------------------------
 ;;; searches for the given comandline argument (stored in [rsi]) in a given line
 ;;; r8 contains pointer to begin of string buffer
-;;; r9 contains pointer to last newline character
+;;; r9 contains pointer to last newline character or begin of string buffer, if
+;;; word was found in first line
 
 sgrep:
     push    rsi                 ; contains pointer to begin of word to search for
@@ -131,6 +132,7 @@ sgrep:
     ; prepare registers
     mov     r10, rsi            ; pointer to begin of word to search for
     mov     r11, r8             ; r8 contains current position in string buffer
+    mov     r9, r8
     xor     r12, r12            ; set to 0
     xor     r13, r13            ; set to 0
 
