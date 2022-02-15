@@ -274,6 +274,7 @@ read_args:
 	
 	dec		rbx					; dec arg-index
 	jnz		read_args			; continue until last argument was printed
+	jmp 	exit				; exit program with exit code 0
 
 input_NaN:
 	;; print error message
