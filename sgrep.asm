@@ -55,7 +55,7 @@ read_input:
 	mov	    rdx, 1			; length -> one character
 
 read_one_char:
-    mov	    rax, SYS_READ	; write syscall
+    mov	    rax, SYS_READ	; read syscall
 	syscall				    ; system call
     inc     rsi             ; next position in linebuffer
     cmp     rax, 0          ; end of file reached?
@@ -82,7 +82,6 @@ write_buf_content:
 	push	rdx
     push    r8
     push    r9
-    inc     r9              ; next char after newline
     mov     rsi, r9         ; set rsi to begin of line
     xor     r8, r8
     ;; prepare arguments for write syscall
