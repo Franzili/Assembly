@@ -87,13 +87,14 @@ write_buf_content:
     push    r9
     inc     r9              ; next char after newline
     mov     rsi, r9         ; set rsi to begin of line
-    xor     r8, r8
+    xor     r8, r8          ; set to 0
     ;; prepare arguments for write syscall
 	mov	    rdi, STDOUT		; file descriptor = 1 (stdout)
 	mov	    rdx, 1			; length
 
 writing_loop:
-    mov     r8b, byte [rsi]
+    mov     r14, [rsi]
+    mov     r8b, byte r14
     cmp     r8b, byte 0     ; end reached?
     je      exit_write      ; exit
     cmp     r8b, byte 0x0a  ; next newline reached?
