@@ -196,6 +196,7 @@ write_stdout:
 	push	rdi
 	push	rsi
 	push	rdx
+    push    r15
 	;; prepare arguments for write syscall
 	mov	    rax, SYS_WRITE	; write syscall
 	mov	    rdi, STDOUT		; file descriptor = 1 (stdout)
@@ -203,6 +204,7 @@ write_stdout:
 	mov	    rdx, r15		; length
 	syscall				    ; system call
 	;; restore registers (in opposite order)
+    pop     r15
 	pop	    rdx
 	pop	    rsi
 	pop	    rdi
