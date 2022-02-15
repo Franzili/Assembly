@@ -85,7 +85,7 @@ write_buf_content:
 	push	rdx
     push    r8
     push    r9
-    inc     r9              ; next char after newline
+;    inc     r9              ; next char after newline
     mov     rsi, r9         ; set rsi to begin of line
     xor     r8, r8          ; set to 0
     ;; prepare arguments for write syscall
