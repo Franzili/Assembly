@@ -73,23 +73,23 @@ writing_loop:
     cmp 	[rsi], byte 0
     je 		eos_found
     mov 	r8, blank
-    mov 	r9, 0   			; inner loop variable
+    mov 	r9, 0   			; inner loop variable (i)
 
 blank_loop:
-    cmp 	r9, rcx
+    cmp 	r9, rcx				; for i < posInString { blank_loop }
     jge 	write_one_char
     call 	write_char
     inc 	r9
     jmp 	blank_loop
 
 write_one_char:
-    mov 	r8, rsi
+    mov 	r8, rsi				; write next char from string
     call 	write_char
     mov 	r8, newline    		; newline
     call 	write_char
     inc 	rcx     			; current position in string
 	inc		rdx					; count
-	inc		rsi					; next position in string
+	inc		rsi					; pointer to next char in string
     jmp 	writing_loop
 
 eos_found:
