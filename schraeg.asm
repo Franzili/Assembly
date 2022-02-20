@@ -45,7 +45,7 @@ write_char:
 	mov		rdi, STDOUT		; file descriptor = 1 (stdout)
 	mov		rsi, r8			; character to write
 	mov		rdx, 1			; length
-	syscall				; system call
+	syscall					; system call
 	;; restore registers (in opposite order)
 	pop 	rcx
     pop 	r8
@@ -65,9 +65,9 @@ write_string:
 	push	rax
 	push	rdi
 	push	rdx
-    mov 	rcx, 0  		; position in string
+    mov 	rcx, 0  			; position in string
     push    rcx
-    push    r9  			; inner loop variable
+    push    r9  				; inner loop variable
 
 writing_loop:
     cmp 	[rsi], byte 0
@@ -85,11 +85,11 @@ blank_loop:
 write_one_char:
     mov 	r8, rsi
     call 	write_char
-    mov 	r8, newline    	; newline
+    mov 	r8, newline    		; newline
     call 	write_char
-    inc 	rcx     		; current position in string
-	inc		rdx				; count
-	inc		rsi				; next position in string
+    inc 	rcx     			; current position in string
+	inc		rdx					; count
+	inc		rsi					; next position in string
     jmp 	writing_loop
 
 eos_found:
