@@ -117,7 +117,7 @@ exit_block:
 ;;; subroutines, value to print given in r15
 ;;; r11 contains the char for one, r12 char for five, r13 char for ten
 
-converting_tree:				; input not in number range 0..9999
+converting_tree:
 	push 	r14
 
 thousands:
